@@ -1,0 +1,9 @@
+{
+  "name": "gem-api",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": " ",
+  "dependencies": {
+    "mongoose": "^5.4.9"
+  }
+}
