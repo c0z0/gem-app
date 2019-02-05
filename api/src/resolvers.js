@@ -8,6 +8,7 @@ module.exports = {
   Query: {
     allUsers: async () => await User.find({}),
     checkLogin: async (_, {id}) => await LoginRequest.findById(id),
+    viewer: (_, __, {viewer}) => viewer,
   },
   Mutation: {
     login: async (_, {email}) => {

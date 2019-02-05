@@ -1,6 +1,8 @@
 const secrets = require('./secrets.json')
 const fetch = require('isomorphic-fetch')
 const crypto = require('crypto')
+const jwt = require('jsonwebtoken')
+const User = require('./models/User')
 
 const apiRoot =
   process.env.NODE_ENV === 'production'
@@ -46,4 +48,10 @@ function generateId(len = 10) {
   return crypto.randomBytes(Math.floor(len / 2)).toString('hex')
 }
 
-module.exports = {generateSecret, sendEmail, generateId, apiRoot}
+async function getViewer(token) {
+  const {id} = jwt.verify(token.slice('Bearer '.length), process.env.JWT_SECRET)
+
+  return await User.findById(id)
+}
+
+module.exports = {generateSecret, sendEmail, generateId, apiRoot, getViewer}
