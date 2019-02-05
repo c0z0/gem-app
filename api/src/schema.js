@@ -4,6 +4,15 @@ module.exports = gql`
   type User {
     email: String!
     id: ID!
+    gems(tagged: String): [Gem]!
+  }
+
+  type Gem {
+    id: ID!
+    url: String!
+    title: String
+    tags: [String]!
+    owner: User!
   }
 
   type LoginRequest {
@@ -24,5 +33,7 @@ module.exports = gql`
   type Mutation {
     login(email: String!): LoginRequest
     verifyLogin(token: String!): LoginRequest
+    createGem(url: String!, tags: [String]): Gem!
+    deleteGem(id: ID!): Gem!
   }
 `

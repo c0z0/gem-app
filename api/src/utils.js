@@ -3,6 +3,7 @@ const fetch = require('isomorphic-fetch')
 const crypto = require('crypto')
 const jwt = require('jsonwebtoken')
 const User = require('./models/User')
+const cheerio = require('cheerio')
 
 const apiRoot =
   process.env.NODE_ENV === 'production'
@@ -54,4 +55,22 @@ async function getViewer(token) {
   return await User.findById(id)
 }
 
-module.exports = {generateSecret, sendEmail, generateId, apiRoot, getViewer}
+async function fetchTitle(url) {
+  const res = await fetch(url)
+
+  if (!res.ok) return null
+
+  const $ = cheerio.load(await res.text())
+  return $('head > title')
+    .text()
+    .trim()
+}
+
+module.exports = {
+  generateSecret,
+  sendEmail,
+  generateId,
+  apiRoot,
+  getViewer,
+  fetchTitle,
+}
