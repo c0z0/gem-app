@@ -6,7 +6,9 @@ export default function Index() {
   return (
     <h1>
       Counter: {counter}{' '}
-      <button onClick={() => setCounter(counter + 1)}>+</button>
+      <button onClick={() => setCounter(counter + 1)} type="button">
+        +
+      </button>
     </h1>
   )
 }
