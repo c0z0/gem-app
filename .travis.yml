@@ -1,0 +1,30 @@
+language: node_js
+node_js:
+  - stable
+# before_script:
+#   - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+#   - chmod +x ./cc-test-reporter
+#   - ./cc-test-reporter before-build
+script:
+  - cd www
+  - yarn lint
+  - yarn test:coverage
+  - cd ../api
+  - yarn lint
+  - yarn test:coverage
+after_script:
+  - cd ..
+  # - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
+deploy:
+  - provider: script
+    script: npm install -g now && now --token=$NOW_TOKEN && now --token=$NOW_TOKEN alias gem.cserdean.me
+    on:
+      branch: master
+  - provider: script
+    script: npm install -g now && now --token=$NOW_TOKEN && now --token=$NOW_TOKEN alias dev.gem.cserdean.me
+    on:
+      branch: dev
+notifications:
+  email:
+    on_failure: always
+    on_success: never

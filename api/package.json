@@ -2,8 +2,21 @@
   "name": "gem-api",
   "version": "1.0.0",
   "main": "index.js",
-  "license": " ",
+  "license": "MIT",
   "dependencies": {
+    "apollo-server": "^2.3.3",
+    "graphql": "^14.1.1",
     "mongoose": "^5.4.9"
+  },
+  "devDependencies": {
+    "eslint": "^5.13.0",
+    "nodemon": "^1.18.9"
+  },
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "nodemon src/index.js",
+    "lint": "eslint src/**/*.js",
+    "test": "echo 'No tests'",
+    "test:coverage": "echo 'No tests'"
   }
 }

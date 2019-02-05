@@ -1,0 +1,12 @@
+{
+  "name": "gem",
+  "version": 2,
+  "builds": [
+    {"src": "api/src/index.js", "use": "@now/node-server"},
+    {"src": "www/package.json", "use": "@now/next"}
+  ],
+  "routes": [
+    {"src": "/api", "dest": "api/src/index.js"},
+    {"src": "/(.*)", "dest": "www/$1"}
+  ]
+}
