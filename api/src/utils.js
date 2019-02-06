@@ -8,7 +8,7 @@ const cheerio = require('cheerio')
 const apiRoot =
   process.env.NODE_ENV === 'production'
     ? process.env.API_ROOT
-    : 'http://localhost:4000'
+    : 'http://localhost:3000'
 
 function generateSecret() {
   let adjective =
@@ -35,7 +35,7 @@ async function sendEmail({to, token, verificationCode}) {
       content: [
         {
           type: 'text/html',
-          value: `To complete the login process access <a href="${apiRoot}/v/${token}">this link</a>`,
+          value: `To complete the login process access <a href="${apiRoot}/v?t=${token}">this link</a>`,
         },
       ],
     }),
