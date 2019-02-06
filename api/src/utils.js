@@ -4,6 +4,7 @@ const crypto = require('crypto')
 const jwt = require('jsonwebtoken')
 const User = require('./models/User')
 const cheerio = require('cheerio')
+const url = require('url')
 
 const apiRoot =
   process.env.NODE_ENV === 'production'
@@ -11,18 +12,13 @@ const apiRoot =
     : 'http://localhost:3000'
 
 function validateUrl(string) {
-  let url
-  try {
-    url = new URL(string)
-  } catch (e) {
-    try {
-      url = new URL('http://' + string)
-    } catch (e) {
-      return null
-    }
-  }
+  let u = url.parse(string)
 
-  return url
+  if (!u.protocol) u = url.parse('http://' + string)
+
+  if (!u.protocol) return null
+
+  return u
 }
 
 function generateSecret() {
