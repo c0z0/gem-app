@@ -1,6 +1,6 @@
-import {ApolloClient, InMemoryCache} from 'apollo-boost'
-import {createHttpLink} from 'apollo-link-http'
-import {setContext} from 'apollo-link-context'
+import { ApolloClient, InMemoryCache } from 'apollo-boost'
+import { createHttpLink } from 'apollo-link-http'
+import { setContext } from 'apollo-link-context'
 import fetch from 'isomorphic-fetch'
 
 let apolloClient = null
@@ -10,19 +10,19 @@ if (!process.browser) {
   global.fetch = fetch
 }
 
-function create(initialState, {getToken}) {
+function create(initialState, { getToken }) {
   const httpLink = createHttpLink({
-    uri: 'http://localhost:4000', // process.browser ? '/api' : 'https://dev.gem.cserdean.me/api',
-    credentials: 'same-origin',
+    uri: process.browser ? '/api' : `${process.env.API_ROOT}/api`,
+    credentials: 'same-origin'
   })
 
-  const authLink = setContext((_, {headers}) => {
+  const authLink = setContext((_, { headers }) => {
     const token = getToken()
     return {
       headers: {
         ...headers,
-        authorization: token ? `Bearer ${token}` : '',
-      },
+        authorization: token ? `Bearer ${token}` : ''
+      }
     }
   })
 
@@ -31,7 +31,7 @@ function create(initialState, {getToken}) {
     connectToDevTools: process.browser,
     ssrMode: !process.browser, // Disables forceFetch on the server (so queries are only run once)
     link: authLink.concat(httpLink),
-    cache: new InMemoryCache().restore(initialState || {}),
+    cache: new InMemoryCache().restore(initialState || {})
   })
 }
 
