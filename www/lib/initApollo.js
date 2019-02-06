@@ -12,7 +12,7 @@ if (!process.browser) {
 
 function create(initialState, {getToken}) {
   const httpLink = createHttpLink({
-    uri: process.browser ? '/api' : 'https://dev.gem.cserdean.me/api',
+    uri: 'http://localhost:4000', // process.browser ? '/api' : 'https://dev.gem.cserdean.me/api',
     credentials: 'same-origin',
   })
 

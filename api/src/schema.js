@@ -1,4 +1,4 @@
-const {gql} = require('apollo-server')
+const { gql } = require('apollo-server')
 
 module.exports = gql`
   type User {
@@ -9,7 +9,8 @@ module.exports = gql`
 
   type Gem {
     id: ID!
-    url: String!
+    displayUrl: String!
+    href: String!
     title: String
     tags: [String]!
     owner: User!

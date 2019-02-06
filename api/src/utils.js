@@ -10,6 +10,21 @@ const apiRoot =
     ? process.env.API_ROOT
     : 'http://localhost:3000'
 
+function validateUrl(string) {
+  let url
+  try {
+    url = new URL(string)
+  } catch (e) {
+    try {
+      url = new URL('http://' + string)
+    } catch (e) {
+      return null
+    }
+  }
+
+  return url
+}
+
 function generateSecret() {
   let adjective =
     secrets.adjectives[Math.floor(Math.random() * secrets.adjectives.length)]
@@ -21,24 +36,24 @@ function generateSecret() {
   return adjective + ' ' + animal
 }
 
-async function sendEmail({to, token, verificationCode}) {
+async function sendEmail({ to, token, verificationCode }) {
   const res = await fetch('https://api.sendgrid.com/v3/mail/send', {
     method: 'POST',
     headers: {
       Authorization: `Bearer ${process.env.SG_KEY}`,
-      'Content-Type': 'application/json',
+      'Content-Type': 'application/json'
     },
     body: JSON.stringify({
-      personalizations: [{to: [{email: to}]}],
-      from: {email: 'gem@cserdean.me'},
+      personalizations: [{ to: [{ email: to }] }],
+      from: { email: 'gem@cserdean.me' },
       subject: `Gem Login Verification (code: ${verificationCode})`,
       content: [
         {
           type: 'text/html',
-          value: `To complete the login process access <a href="${apiRoot}/v?t=${token}">this link</a>`,
-        },
-      ],
-    }),
+          value: `To complete the login process access <a href="${apiRoot}/v?t=${token}">this link</a>`
+        }
+      ]
+    })
   })
 
   if (res.ok) return
@@ -50,7 +65,10 @@ function generateId(len = 10) {
 }
 
 async function getViewer(token) {
-  const {id} = jwt.verify(token.slice('Bearer '.length), process.env.JWT_SECRET)
+  const { id } = jwt.verify(
+    token.slice('Bearer '.length),
+    process.env.JWT_SECRET
+  )
 
   return await User.findById(id)
 }
@@ -73,4 +91,5 @@ module.exports = {
   apiRoot,
   getViewer,
   fetchTitle,
+  validateUrl
 }
