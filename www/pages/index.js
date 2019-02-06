@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react'
+import React, { useState } from 'react'
 import { Query, Mutation } from 'react-apollo'
 import styled from 'styled-components'
 import Router from 'next/router'
@@ -13,7 +13,6 @@ import Container from '../components/Container'
 import Gem from '../components/Gem'
 import { isValidUrl } from '../components/NewGem'
 import Footer from '../components/Footer'
-import { serialize } from 'parse5'
 
 const GemsContainer = styled(Container)`
   padding-bottom: 147px;
