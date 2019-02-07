@@ -14,6 +14,12 @@ import Gem from '../components/Gem'
 import { isValidUrl } from '../components/NewGem'
 import Footer from '../components/Footer'
 
+const NoGems = styled.p`
+  text-align: center;
+  margin-top: 32px;
+  color: #ddd;
+`
+
 const GemsContainer = styled(Container)`
   padding-bottom: 147px;
 
@@ -171,6 +177,13 @@ export default function Index() {
                   )
 
                 const gems = memoizedFilterGems(data.viewer.gems, searchQuery)
+
+                if (!gems.length)
+                  return (
+                    <NoGems>
+                      {searchQuery.length ? 'No Gems found.' : 'No saved Gems.'}
+                    </NoGems>
+                  )
 
                 return gems.map(g => (
                   <Gem
