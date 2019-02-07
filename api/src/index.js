@@ -4,6 +4,8 @@ require('dotenv').config()
 
 require('./db')
 
+const production = process.env.NODE_ENV === 'production'
+
 const typeDefs = require('./schema')
 const resolvers = require('./resolvers')
 const {getViewer} = require('./utils')
@@ -11,8 +13,8 @@ const {getViewer} = require('./utils')
 const server = new ApolloServer({
   typeDefs,
   resolvers,
-  introspection: true,
-  playground: true,
+  introspection: !production,
+  playground: !production,
   context: async ({req}) => {
     const token = req.headers.authorization
 
