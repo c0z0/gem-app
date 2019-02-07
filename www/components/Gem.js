@@ -4,6 +4,18 @@ import PropTypes from 'prop-types'
 
 import { LoadingElipsis } from './Typography'
 
+const copyToClipboard = str => {
+  const el = document.createElement('textarea')
+  el.value = str
+  el.setAttribute('readonly', '')
+  el.style.position = 'absolute'
+  el.style.left = '-9999px'
+  document.body.appendChild(el)
+  el.select()
+  document.execCommand('copy')
+  document.body.removeChild(el)
+}
+
 const Container = styled.div`
   border-bottom: 1px solid #eee;
   margin: 32px 0;
@@ -113,6 +125,11 @@ const MenuItem = styled.li`
   &:hover {
     background: #fafafa;
   }
+
+  &:not(:first-child) {
+    border-radius: 0 0 5px 5px;
+    border-top: 1px #ddd solid;
+  }
 `
 
 export default function Gem({ title, href, displayUrl, tags, onDelete, id }) {
@@ -146,6 +163,7 @@ export default function Gem({ title, href, displayUrl, tags, onDelete, id }) {
           <MenuItem red onClick={() => onDelete(id)}>
             Delete
           </MenuItem>
+          <MenuItem onClick={() => copyToClipboard(href)}>Copy</MenuItem>
         </Menu>
       </OptionsButton>
       <div>
