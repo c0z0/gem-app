@@ -5,6 +5,7 @@ const jwt = require('jsonwebtoken')
 const User = require('./models/User')
 const cheerio = require('cheerio')
 const url = require('url')
+const emailTemplate = require('./email-template')
 
 const apiRoot =
   process.env.NODE_ENV === 'production'
@@ -46,7 +47,10 @@ async function sendEmail({ to, token, verificationCode }) {
       content: [
         {
           type: 'text/html',
-          value: `To complete the login process access <a href="${apiRoot}/v?t=${token}">this link</a>`
+          value: emailTemplate({
+            secret: verificationCode,
+            link: `${apiRoot}/v?t=${token}`
+          })
         }
       ]
     })
