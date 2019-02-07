@@ -13,11 +13,13 @@
   },
   "devDependencies": {
     "eslint": "^5.13.0",
+    "micro-proxy": "^1.1.0",
     "nodemon": "^1.18.9"
   },
   "scripts": {
     "start": "node src/index.js",
-    "dev": "nodemon src/index.js",
+    "dev": "API_ROOT=http://localhost:9000 nodemon src/index.js",
+    "proxy": "micro-proxy -r proxy.json -p 9000",
     "lint": "eslint src/**/*.js",
     "test": "echo 'No tests'",
     "test:coverage": "echo 'No tests'"
