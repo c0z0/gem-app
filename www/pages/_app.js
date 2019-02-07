@@ -28,7 +28,7 @@ class MyApp extends App {
     return (
       <Container>
         <Head>
-          <title>Gem</title>
+          <title>Gem - Keep your online finds</title>
         </Head>
         <ApolloProvider client={apolloClient}>
           <ThemeProvider theme={theme}>
