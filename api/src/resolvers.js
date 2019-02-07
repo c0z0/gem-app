@@ -80,7 +80,7 @@ module.exports = {
   User: {
     id: ({ _id }) => _id,
     gems: async ({ _id }, { tagged }) =>
-      (await Gem.find({ userId: _id }).sort('field -createdAt'))
+      (await Gem.find({ userId: _id }).sort('createdAt'))
         .filter(g => !tagged || g.tags.includes(tagged))
         .reverse()
   }
