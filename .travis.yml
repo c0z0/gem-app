@@ -1,17 +1,17 @@
 language: node_js
 node_js:
   - stable
-# before_script:
-#   - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
-#   - chmod +x ./cc-test-reporter
-#   - ./cc-test-reporter before-build
+before_script:
+  - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+  - chmod +x ./cc-test-reporter
+  - ./cc-test-reporter before-build
 script:
   - yarn --cwd packages/www lint
   - yarn --cwd packages/www test:coverage
   - yarn --cwd packages/api lint
   - yarn --cwd packages/api test:coverage
-# after_script:
-#   - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
+after_script:
+  - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
 deploy:
   - provider: script
     script: npm install -g now && now --token=$NOW_TOKEN -e API_ROOT="https://gem.cserdean.me" && now --token=$NOW_TOKEN alias gem.cserdean.me
