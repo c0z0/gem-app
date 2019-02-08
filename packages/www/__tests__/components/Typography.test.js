@@ -4,7 +4,7 @@ import { ThemeProvider } from 'styled-components'
 import theme from '../../lib/theme'
 import 'jest-styled-components'
 
-import { Title, LoadingElipsis, P } from '../../components/Typography'
+import { Title, LoadingElipsis, P, H1 } from '../../components/Typography'
 
 afterEach(cleanup)
 
@@ -48,6 +48,16 @@ test('LoadingElipsis matches snapshot', () => {
   const { container } = render(
     <ThemeProvider theme={theme}>
       <LoadingElipsis />
+    </ThemeProvider>
+  )
+
+  expect(container).toMatchSnapshot()
+})
+
+test('H1 matches snapshot', () => {
+  const { container } = render(
+    <ThemeProvider theme={theme}>
+      <H1>Test heading</H1>
     </ThemeProvider>
   )
 

@@ -50,23 +50,39 @@ module.exports = {
 
       return newLoginRequest
     },
-    createGem: async (_, { url, tags }, { viewer }) => {
+    createGem: async (_, { url, tags, favorite }, { viewer }) => {
       const parsedUrl = validateUrl(url)
 
       if (!parsedUrl) throw new Error('Invalid url')
+
+      const titlePromise = fetchTitle(parsedUrl.href)
+      // const shortenPromise = shortenUrl(parsedUrl.href)
+
+      const [title] = [await titlePromise /*, await shortenPromise*/]
 
       const gem = await Gem.create({
         displayUrl: parsedUrl.host,
         href: parsedUrl.href,
         userId: viewer._id,
         tags,
-        title: await fetchTitle(parsedUrl.href)
+        favorite,
+        title
       })
 
       return gem
     },
     deleteGem: async (_, { id }, { viewer }) => {
       return await Gem.findOneAndDelete({ _id: id, userId: viewer._id })
+    },
+    toggleFavoriteGem: async (_, { id }, { viewer }) => {
+      const gem = await Gem.findOne({ _id: id, userId: viewer._id })
+      const newGem = await Gem.findByIdAndUpdate(
+        gem._id,
+        { favorite: !gem.favorite },
+        { new: true }
+      )
+
+      return newGem
     }
   },
   LoginRequest: {
@@ -75,7 +91,8 @@ module.exports = {
   },
   Gem: {
     id: ({ _id }) => _id,
-    owner: async ({ userId }) => await User.findById(userId)
+    owner: async ({ userId }) => await User.findById(userId),
+    favorite: ({ favorite }) => true && favorite
   },
   User: {
     id: ({ _id }) => _id,

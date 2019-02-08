@@ -14,6 +14,7 @@ module.exports = gql`
     title: String
     tags: [String]!
     owner: User!
+    favorite: Boolean!
   }
 
   type LoginRequest {
@@ -34,7 +35,8 @@ module.exports = gql`
   type Mutation {
     login(email: String!): LoginRequest
     verifyLogin(token: String!): LoginRequest
-    createGem(url: String!, tags: [String]): Gem!
+    createGem(url: String!, tags: [String], favorite: Boolean): Gem!
     deleteGem(id: ID!): Gem!
+    toggleFavoriteGem(id: ID!): Gem!
   }
 `

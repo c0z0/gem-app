@@ -1,5 +1,27 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`H1 matches snapshot 1`] = `
+.c0 {
+  font-size: 32px;
+  margin: 2em 0 1em 0;
+  font-weight: 600;
+}
+
+@media (max-width:991px) {
+  .c0 {
+    margin: 1em 0 1em 0;
+  }
+}
+
+<div>
+  <h1
+    class="c0"
+  >
+    Test heading
+  </h1>
+</div>
+`;
+
 exports[`LoadingElipsis matches snapshot 1`] = `
 .c0 {
   -webkit-animation: gbsBeW 1.4s infinite;
