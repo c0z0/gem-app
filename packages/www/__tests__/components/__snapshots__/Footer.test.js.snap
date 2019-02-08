@@ -1,0 +1,111 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Footer matches snapshot 1`] = `
+.c1 {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0 12px;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
+
+.c0 {
+  background: #fafafa;
+  border-top: solid 1px #eaeaea;
+  padding: 48px 0;
+  color: #cecece;
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}
+
+.c2 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
+
+.c4 {
+  margin-left: 8px;
+  font-weight: 400;
+  margin-right: 20px;
+  color: #cecece;
+  font-size: 20px;
+}
+
+.c3 {
+  width: 40px;
+  -webkit-filter: grayscale(100%);
+  filter: grayscale(100%);
+  opacity: 0.5;
+}
+
+.c5 {
+  color: #cecece;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  -webkit-transition: all 0.2s;
+  transition: all 0.2s;
+}
+
+.c5:hover {
+  color: #484848;
+}
+
+@media (max-width:991px) {
+  .c1 {
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+  }
+}
+
+<div>
+  <div
+    class="c0"
+  >
+    <div
+      class="c1"
+    >
+      <div
+        class="c2"
+      >
+        <img
+          class="c3"
+          src="/static/diamond.svg"
+        />
+        <span
+          class="c4"
+        >
+          Gem
+        </span>
+      </div>
+      <p>
+        Made by 
+        <a
+          class="c5"
+          href="https://cserdean.me"
+        >
+          cserdean.me.
+        </a>
+      </p>
+    </div>
+  </div>
+</div>
+`;

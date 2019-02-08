@@ -75,8 +75,6 @@ export default function Index() {
       .trim()
       .toLowerCase()
 
-    console.log(nameQuery)
-
     let q = sq
 
     const tags = []

@@ -1,0 +1,86 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`LoadingElipsis matches snapshot 1`] = `
+.c0 {
+  -webkit-animation: gbsBeW 1.4s infinite;
+  animation: gbsBeW 1.4s infinite;
+}
+
+.c0:nth-child(2) {
+  -webkit-animation-delay: 0.2s;
+  animation-delay: 0.2s;
+}
+
+.c0:nth-child(3) {
+  -webkit-animation-delay: 0.4s;
+  animation-delay: 0.4s;
+}
+
+<div>
+  <span
+    class="c0"
+  >
+    .
+  </span>
+  <span
+    class="c0"
+  >
+    .
+  </span>
+  <span
+    class="c0"
+  >
+    .
+  </span>
+</div>
+`;
+
+exports[`P matches snapshot 1`] = `
+.c0 {
+  line-height: 1.5rem;
+}
+
+<div>
+  <p
+    class="c0"
+  >
+    Test text
+  </p>
+</div>
+`;
+
+exports[`P matches snapshot 2`] = `
+<div>
+  <p
+    class="sc-bwzfXH rGTGg"
+  >
+    Test text
+  </p>
+</div>
+`;
+
+exports[`Title matches snapshot 1`] = `
+.c0 {
+  font-weight: normal;
+  color: #75489B;
+  font-size: 2rem;
+}
+
+<div>
+  <h1
+    class="c0"
+  >
+    Test title
+  </h1>
+</div>
+`;
+
+exports[`Title matches snapshot 2`] = `
+<div>
+  <h1
+    class="sc-bdVaJa gvGjOb"
+  >
+    Test text
+  </h1>
+</div>
+`;

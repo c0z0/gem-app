@@ -97,7 +97,8 @@ const MenuEntry = keyframes`
 
 const Menu = styled.ul`
   position: absolute;
-  top: 100%;
+  top: calc(100% + 2px);
+  z-index: 5;
   right: 0;
   animation: ${MenuEntry} 0.2s;
   padding: 0;

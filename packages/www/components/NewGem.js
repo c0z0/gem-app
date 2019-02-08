@@ -2,7 +2,7 @@ import React, { useRef, useState, useEffect } from 'react'
 import styled from 'styled-components'
 import PropTypes from 'prop-types'
 
-import { LoadingElipsis, P } from './Typography'
+import { LoadingElipsis } from './Typography'
 import { Button } from './FormElements'
 
 export function isValidUrl(string) {

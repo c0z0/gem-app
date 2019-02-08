@@ -1,0 +1,82 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Button matches snapshot 1`] = `
+.c0 {
+  outline: none;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 12px;
+  font-size: 16px;
+  margin: 4px;
+  color: white;
+  cursor: pointer;
+  background: #75489B;
+  border: 1px solid transparent;
+}
+
+<div>
+  <button
+    class="c0"
+  />
+</div>
+`;
+
+exports[`Button matches snapshot 2`] = `
+<div>
+  <button
+    class="sc-bwzfXH hRWzJG"
+    disabled=""
+  />
+</div>
+`;
+
+exports[`Input matches snapshot 1`] = `
+.c0 {
+  width: 275px;
+  max-width: 100%;
+  padding: 8px;
+  font-size: 16px;
+  outline: none;
+  color: #484848;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  -webkit-transition: all 0.2s;
+  transition: all 0.2s;
+  margin: 1rem 0;
+}
+
+.c0::-webkit-input-placeholder {
+  color: #ddd;
+}
+
+.c0::-moz-placeholder {
+  color: #ddd;
+}
+
+.c0:-ms-input-placeholder {
+  color: #ddd;
+}
+
+.c0::placeholder {
+  color: #ddd;
+}
+
+.c0:focus {
+  border-color: #aaa;
+}
+
+<div>
+  <input
+    class="c0"
+  />
+</div>
+`;
+
+exports[`Input matches snapshot 2`] = `
+<div>
+  <input
+    class="sc-bdVaJa fZpnqE"
+    disabled=""
+  />
+</div>
+`;
