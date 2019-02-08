@@ -1,6 +1,6 @@
 <h1 align="center">
 	<a href="https://cserdean.me">
-		<img src="www/static/diamond.svg" alt="logo" width="200">
+		<img src="packages/www/static/diamond.svg" alt="logo" width="200">
 	</a>
 </h1>
 
