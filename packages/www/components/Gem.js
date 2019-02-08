@@ -27,9 +27,9 @@ const Container = styled.div`
     margin-top: 48px;
   }
 
-  &:last-child {
+  /* &:last-child {
     margin-bottom: 0;
-  }
+  } */
 `
 
 const Title = styled.a`
@@ -133,6 +133,11 @@ const MenuItem = styled.li`
   }
 `
 
+const Tags = styled.div`
+  margin-bottom: 32px;
+  margin-top: 16px;
+`
+
 export default function Gem({
   title,
   href,
@@ -190,7 +195,7 @@ export default function Gem({
         </Title>{' '}
         | <Url href={href}>{displayUrl}</Url>
       </div>
-      <p>
+      <Tags>
         {!tags.length
           ? 'No tags...'
           : tags.map(t => (
@@ -198,7 +203,7 @@ export default function Gem({
                 {t}
               </Tag>
             ))}
-      </p>
+      </Tags>
     </Container>
   )
 }
