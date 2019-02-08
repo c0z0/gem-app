@@ -11,7 +11,7 @@ script:
   - yarn --cwd packages/api lint
   - yarn --cwd packages/api test:coverage
 after_script:
-  - cd packages/www && ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
+  - cd packages/www && ../../cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
 deploy:
   - provider: script
     script: npm install -g now && now --token=$NOW_TOKEN -e API_ROOT="https://gem.cserdean.me" && now --token=$NOW_TOKEN alias gem.cserdean.me
