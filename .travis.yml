@@ -6,10 +6,10 @@ node_js:
 #   - chmod +x ./cc-test-reporter
 #   - ./cc-test-reporter before-build
 script:
-  - yarn --cwd www lint
-  - yarn --cwd www test:coverage
-  - yarn --cwd api lint
-  - yarn --cwd api test:coverage
+  - yarn --cwd packages/www lint
+  - yarn --cwd packages/www test:coverage
+  - yarn --cwd packages/api lint
+  - yarn --cwd packages/api test:coverage
 # after_script:
 #   - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
 deploy:
