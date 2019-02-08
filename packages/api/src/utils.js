@@ -84,6 +84,20 @@ async function fetchTitle(url) {
     .trim()
 }
 
+async function shortenUrl(url) {
+  const res = await fetch('https://s.cserdean.me/api/sh', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ url })
+  })
+
+  if (!res.ok) return url
+
+  return 'https://s.cserdean.me/' + (await res.json()).id
+}
+
 module.exports = {
   generateSecret,
   sendEmail,
@@ -91,5 +105,6 @@ module.exports = {
   apiRoot,
   getViewer,
   fetchTitle,
-  validateUrl
+  validateUrl,
+  shortenUrl
 }

@@ -24,8 +24,9 @@ const Wrapper = styled.div`
   opacity: ${({ open }) => (open ? '1' : '0')};
   transition: all 0.2s;
   overflow: hidden;
-
-  padding-top: ${({ open }) => (open ? '16px' : '0')};
+  @media (${({ theme }) => theme.b.tabletUp}) {
+    padding-top: ${({ open }) => (open ? '12px' : '0')};
+  }
 `
 const Input = styled.input`
   flex: 1;

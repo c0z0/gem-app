@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react'
+import Link from 'next/link'
 import styled from 'styled-components'
 import PropTypes from 'prop-types'
 
@@ -6,15 +7,27 @@ import Container from './Container'
 import NewGem from './NewGem'
 
 const ToolbarContainer = styled(Container)`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  @media (${({ theme }) => theme.b.phoneOnly}) {
+    display: block;
+  }
+`
+
+const SearchContainer = styled.div`
   padding-top: 8px;
+  flex: 2;
   padding-bottom: 8px;
   display: flex;
   align-items: center;
+  justify-content: space-between;
 `
 
 const ControlsContainer = styled.div`
   display: flex;
-  flex: 1;
+  flex: 2;
   transition: all 0.2s;
   margin-left: ${({ diamondVisible }) => (diamondVisible ? '0' : '-36px')};
 `
@@ -106,13 +119,38 @@ const Carret = styled.img.attrs({ src: '/static/carret.svg' })`
   margin-right: 10px;
 `
 
+const MenuContainer = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  flex: 1;
+
+  @media (${({ theme }) => theme.b.phoneOnly}) {
+    justify-content: space-around;
+    padding-top: 4px;
+    padding-bottom: 12px;
+  }
+`
+
+const MenuItem = styled.a`
+  color: ${({ active }) => (active ? '#484848' : '#aaa')};
+  font-size: 14px;
+  text-decoration: none;
+  margin-left: 12px;
+  transition: all 0.2s;
+
+  &:hover {
+    color: #484848;
+  }
+`
+
 export default function Toolbar({
   newGem,
   onNewGemChange,
   onNewGemSubmit,
   newGemLoading,
   searchQuery,
-  onSearchQueryChange
+  onSearchQueryChange,
+  favorites
 }) {
   const [diamondVisible, setDiamondVisible] = useState(false)
   const [newGemVisible, setNewGemVisible] = useState(false)
@@ -134,23 +172,33 @@ export default function Toolbar({
   return (
     <Border ref={toolbarRef} floating={diamondVisible}>
       <ToolbarContainer>
-        <Diamond visible={diamondVisible} />
-        <ControlsContainer diamondVisible={diamondVisible}>
-          <Action
-            active={newGemVisible}
-            onClick={() => setNewGemVisible(!newGemVisible)}
-          >
-            <Carret flipped={newGemVisible} />{' '}
-            <span>
-              Add <HideMobile>gem</HideMobile>
-            </span>
-          </Action>
-          <Input
-            placeholder="Search..."
-            value={searchQuery}
-            onChange={({ target: { value } }) => onSearchQueryChange(value)}
-          />
-        </ControlsContainer>
+        <SearchContainer>
+          <Diamond visible={diamondVisible} />
+          <ControlsContainer diamondVisible={diamondVisible}>
+            <Action
+              active={newGemVisible}
+              onClick={() => setNewGemVisible(!newGemVisible)}
+            >
+              <Carret flipped={newGemVisible} />{' '}
+              <span>
+                Add <HideMobile>gem</HideMobile>
+              </span>
+            </Action>
+            <Input
+              placeholder="Search..."
+              value={searchQuery}
+              onChange={({ target: { value } }) => onSearchQueryChange(value)}
+            />
+          </ControlsContainer>
+        </SearchContainer>
+        <MenuContainer>
+          <Link href="/" passHref>
+            <MenuItem active={!favorites}>My Gems</MenuItem>
+          </Link>
+          <Link href="/favorites" passHref>
+            <MenuItem active={favorites}>Favorites</MenuItem>
+          </Link>
+        </MenuContainer>
       </ToolbarContainer>
       <Container>
         <NewGem
@@ -177,5 +225,6 @@ Toolbar.propTypes = {
   onNewGemSubmit: PropTypes.func.isRequired,
   newGemLoading: PropTypes.bool.isRequired,
   onSearchQueryChange: PropTypes.func.isRequired,
-  searchQuery: PropTypes.string.isRequired
+  searchQuery: PropTypes.string.isRequired,
+  favorites: PropTypes.bool.isRequired
 }

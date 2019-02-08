@@ -3,11 +3,11 @@ import React from 'react'
 import redirectLogin from '../lib/redirect'
 import GemList from '../components/GemList'
 
-export default function Index() {
-  return <GemList />
+export default function Favorites() {
+  return <GemList favorites />
 }
 
-Index.getInitialProps = async ctx => {
+Favorites.getInitialProps = async ctx => {
   await redirectLogin(ctx, '/login')
   return {}
 }

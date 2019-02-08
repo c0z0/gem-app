@@ -17,8 +17,7 @@ const copyToClipboard = str => {
 }
 
 const Container = styled.div`
-  border-bottom: 1px solid #eee;
-  margin: 32px 0;
+  margin: 28px 0;
   padding-right: 18px;
   position: relative;
   color: #ddd;
@@ -27,9 +26,9 @@ const Container = styled.div`
     margin-top: 48px;
   }
 
-  /* &:last-child {
-    margin-bottom: 0;
-  } */
+  &:not(:last-child) {
+    border-bottom: 1px solid #eee;
+  }
 `
 
 const Title = styled.a`
@@ -98,7 +97,7 @@ const MenuEntry = keyframes`
 const Menu = styled.ul`
   position: absolute;
   top: calc(100% + 2px);
-  z-index: 5;
+  z-index: 1;
   right: 0;
   animation: ${MenuEntry} 0.2s;
   padding: 0;
@@ -113,9 +112,10 @@ const Menu = styled.ul`
 
 const MenuItem = styled.li`
   padding: 0 18px;
-  font-size: 12px;
+  font-size: 14px;
+  white-space: nowrap;
   line-height: 40px;
-  color: ${({ red }) => (red ? 'red' : '#444')};
+  color: ${({ red }) => (red ? 'red' : '#484848')};
 
   list-style: none;
   text-align: left;
@@ -134,8 +134,16 @@ const MenuItem = styled.li`
 `
 
 const Tags = styled.div`
-  margin-bottom: 32px;
-  margin-top: 16px;
+  margin-bottom: 28px;
+  margin-top: 8px;
+  display: flex;
+  align-items: center;
+`
+
+const Star = styled.img.attrs({ src: '/static/star.svg' })`
+  width: 14px;
+  margin-right: 8px;
+  cursor: pointer;
 `
 
 export default function Gem({
@@ -143,9 +151,11 @@ export default function Gem({
   href,
   displayUrl,
   tags,
+  favorite,
   onDelete,
   id,
-  onTagClick
+  onTagClick,
+  onToggleFavorite
 }) {
   const [optionsState, setOptions] = useState(false)
   const menuRef = useRef(null)
@@ -177,6 +187,9 @@ export default function Gem({
           <MenuItem onClick={() => copyToClipboard(href)}>
             Copy to clipboard
           </MenuItem>
+          <MenuItem onClick={() => onToggleFavorite({ id, favorite })}>
+            {favorite ? 'Remove from favorites' : 'Add to favorites'}
+          </MenuItem>
           <MenuItem red onClick={() => onDelete(id)}>
             Delete
           </MenuItem>
@@ -196,6 +209,9 @@ export default function Gem({
         | <Url href={href}>{displayUrl}</Url>
       </div>
       <Tags>
+        {favorite && (
+          <Star onClick={() => onToggleFavorite({ id, favorite })} />
+        )}
         {!tags.length
           ? 'No tags...'
           : tags.map(t => (
@@ -213,7 +229,9 @@ Gem.propTypes = {
   title: PropTypes.string.isRequired,
   href: PropTypes.string.isRequired,
   displayUrl: PropTypes.string.isRequired,
+  favorite: PropTypes.bool.isRequired,
   tags: PropTypes.arrayOf(PropTypes.string).isRequired,
   onDelete: PropTypes.func.isRequired,
-  onTagClick: PropTypes.func.isRequired
+  onTagClick: PropTypes.func.isRequired,
+  onToggleFavorite: PropTypes.func.isRequired
 }

@@ -1,16 +1,26 @@
 import React from 'react'
-import styled, {keyframes} from 'styled-components'
+import styled, { keyframes } from 'styled-components'
 
 export const Title = styled.h1`
   font-weight: normal;
-  color: ${({theme}) => theme.main};
+  color: ${({ theme }) => theme.main};
   font-size: 2rem;
-  ${({light}) => light && `color: white;`}
+  ${({ light }) => light && `color: white;`}
 `
 
 export const P = styled.p`
   line-height: 1.5rem;
-  ${({light}) => light && `color: white;`}
+  ${({ light }) => light && `color: white;`}
+`
+
+export const H1 = styled.h1`
+  font-size: 32px;
+  margin: 2em 0 1em 0;
+  font-weight: 600;
+
+  @media (${({ theme }) => theme.b.phoneOnly}) {
+    margin: 1em 0 1em 0;
+  }
 `
 
 const ElipsisAnimation = keyframes`
