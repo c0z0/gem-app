@@ -47,9 +47,9 @@ const OptionsButton = styled.button`
   border: none;
   outline: none;
   position: absolute;
-  top: 0;
+  top: -4px;
   right: -4px;
-  padding: 0 8px;
+  padding: 8px;
   cursor: pointer;
   transition: all 0.2s;
 `
@@ -132,7 +132,15 @@ const MenuItem = styled.li`
   }
 `
 
-export default function Gem({ title, href, displayUrl, tags, onDelete, id }) {
+export default function Gem({
+  title,
+  href,
+  displayUrl,
+  tags,
+  onDelete,
+  id,
+  onTagClick
+}) {
   const [optionsState, setOptions] = useState(false)
   const menuRef = useRef(null)
 
@@ -160,10 +168,12 @@ export default function Gem({ title, href, displayUrl, tags, onDelete, id }) {
       <OptionsButton onClick={() => setOptions(!optionsState)}>
         <Dots />
         <Menu visible={optionsState} ref={menuRef}>
+          <MenuItem onClick={() => copyToClipboard(href)}>
+            Copy to clipboard
+          </MenuItem>
           <MenuItem red onClick={() => onDelete(id)}>
             Delete
           </MenuItem>
-          <MenuItem onClick={() => copyToClipboard(href)}>Copy</MenuItem>
         </Menu>
       </OptionsButton>
       <div>
@@ -180,7 +190,13 @@ export default function Gem({ title, href, displayUrl, tags, onDelete, id }) {
         | <Url href={href}>{displayUrl}</Url>
       </div>
       <p>
-        {!tags.length ? 'No tags...' : tags.map(t => <Tag key={t}>{t}</Tag>)}
+        {!tags.length
+          ? 'No tags...'
+          : tags.map(t => (
+              <Tag key={t} onClick={() => onTagClick(t)}>
+                {t}
+              </Tag>
+            ))}
       </p>
     </Container>
   )
@@ -192,5 +208,6 @@ Gem.propTypes = {
   href: PropTypes.string.isRequired,
   displayUrl: PropTypes.string.isRequired,
   tags: PropTypes.arrayOf(PropTypes.string).isRequired,
-  onDelete: PropTypes.func.isRequired
+  onDelete: PropTypes.func.isRequired,
+  onTagClick: PropTypes.func.isRequired
 }

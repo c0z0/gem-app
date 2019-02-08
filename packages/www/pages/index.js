@@ -69,11 +69,13 @@ export default function Index() {
   const [searchQuery, setSearchQuery] = useState('')
 
   function filterGems(gems, sq) {
-    const r = /(tagged|tag):(\w+)/g
+    const r = /(tagged|tag):([\w-]+)/g
     const nameQuery = sq
       .replace(r, '')
       .trim()
       .toLowerCase()
+
+    console.log(nameQuery)
 
     let q = sq
 
@@ -187,6 +189,9 @@ export default function Index() {
 
                 return gems.map(g => (
                   <Gem
+                    onTagClick={t =>
+                      setSearchQuery(`${searchQuery} tag:${t}`.trim())
+                    }
                     key={g.id}
                     {...g}
                     onDelete={id =>

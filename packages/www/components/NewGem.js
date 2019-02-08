@@ -2,7 +2,7 @@ import React, { useRef, useState, useEffect } from 'react'
 import styled from 'styled-components'
 import PropTypes from 'prop-types'
 
-import { LoadingElipsis } from './Typography'
+import { LoadingElipsis, P } from './Typography'
 import { Button } from './FormElements'
 
 export function isValidUrl(string) {
@@ -21,6 +21,7 @@ export function isValidUrl(string) {
 
 const Wrapper = styled.div`
   height: ${({ open, openHeight }) => (open ? openHeight : '0px')};
+  opacity: ${({ open }) => (open ? '1' : '0')};
   transition: all 0.2s;
   overflow: hidden;
 
@@ -56,7 +57,7 @@ const SubmitButton = styled(Button).attrs({ type: 'sumbit' })`
   margin: 0;
 
   @media (${({ theme }) => theme.b.phoneOnly}) {
-    flex: 1;
+    width: 100%;
   }
 `
 
@@ -67,7 +68,12 @@ const InputWrapper = styled.div`
 `
 
 const SubmitWrapper = styled(InputWrapper)`
-  justify-content: flex-end;
+  justify-content: space-between;
+  flex-direction: row-reverse;
+
+  @media (${({ theme }) => theme.b.phoneOnly}) {
+    flex-direction: column;
+  }
 `
 
 const Label = styled.label`
@@ -103,7 +109,7 @@ export default function NewGem({
         <InputWrapper>
           <Label>Link: </Label>
           <Input
-            disabled={loading}
+            disabled={loading || !visible}
             placeholder="example.com"
             value={newGem.url}
             onChange={({ target: { value } }) => {
@@ -114,7 +120,7 @@ export default function NewGem({
         <InputWrapper>
           <Label>Tags: </Label>
           <Input
-            disabled={loading}
+            disabled={loading || !visible}
             placeholder="diy, development, gym"
             value={newGem.tags.join(',')}
             onChange={({ target: { value } }) => {
