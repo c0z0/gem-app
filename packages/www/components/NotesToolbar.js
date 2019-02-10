@@ -1,9 +1,8 @@
-import React, { useState } from 'react'
+import React from 'react'
 import styled from 'styled-components'
 import PropTypes from 'prop-types'
 
 import SubMenu from './SubMenu'
-import NewGem from './NewGem'
 
 const Action = styled.button`
   border: 1px solid #eaeaea;
@@ -61,36 +60,27 @@ const HideMobile = styled.span`
   }
 `
 
-const Carret = styled.img.attrs({ src: '/static/carret.svg' })`
+const Plus = styled.img.attrs({ src: '/static/plus.svg' })`
   transform: rotate(${({ flipped }) => (flipped ? '180deg' : '0deg')});
 
   transition: transform 0.2s;
   margin-right: 10px;
 `
 
-export default function Toolbar({
-  newGem,
-  onNewGemChange,
-  onNewGemSubmit,
-  newGemLoading,
+export default function NotesToolbar({
+  onNewNote,
   searchQuery,
-  onSearchQueryChange,
-  favorites
+  onSearchQueryChange
 }) {
-  const [newGemVisible, setNewGemVisible] = useState(false)
-
   return (
     <SubMenu
-      active={favorites ? '/favorites' : '/'}
+      active="/notes"
       controls={
         <React.Fragment>
-          <Action
-            active={newGemVisible}
-            onClick={() => setNewGemVisible(!newGemVisible)}
-          >
-            <Carret flipped={newGemVisible} />{' '}
+          <Action onClick={onNewNote}>
+            <Plus />{' '}
             <span>
-              Add <HideMobile>gem</HideMobile>
+              Create <HideMobile>note</HideMobile>
             </span>
           </Action>
           <Input
@@ -100,30 +90,12 @@ export default function Toolbar({
           />
         </React.Fragment>
       }
-    >
-      <NewGem
-        loading={newGemLoading}
-        onSubmit={nG => {
-          setNewGemVisible(false)
-          onNewGemSubmit(nG)
-        }}
-        visible={newGemVisible}
-        newGem={newGem}
-        onNewGemChange={onNewGemChange}
-      />
-    </SubMenu>
+    />
   )
 }
 
-Toolbar.propTypes = {
-  newGem: PropTypes.shape({
-    url: PropTypes.string.isRequired,
-    tags: PropTypes.arrayOf(PropTypes.string)
-  }).isRequired,
-  onNewGemChange: PropTypes.func.isRequired,
-  onNewGemSubmit: PropTypes.func.isRequired,
-  newGemLoading: PropTypes.bool.isRequired,
+NotesToolbar.propTypes = {
+  onNewNote: PropTypes.func.isRequired,
   onSearchQueryChange: PropTypes.func.isRequired,
-  searchQuery: PropTypes.string.isRequired,
-  favorites: PropTypes.bool.isRequired
+  searchQuery: PropTypes.string.isRequired
 }

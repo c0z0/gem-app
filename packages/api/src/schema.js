@@ -1,10 +1,20 @@
 const { gql } = require('apollo-server')
 
 module.exports = gql`
+  scalar JSON
+
   type User {
     email: String!
     id: ID!
     gems(tagged: String): [Gem]!
+    notes: [Note]!
+  }
+
+  type Note {
+    id: ID!
+    title: String!
+    content: JSON!
+    owner: User!
   }
 
   type Gem {
@@ -29,14 +39,18 @@ module.exports = gql`
     allUsers: [User]!
     viewer: User
     user(id: ID, email: String): User
+    note(id: ID!): Note
     checkLogin(id: ID!): LoginRequest
   }
 
   type Mutation {
+    createNote: Note!
+    deleteNote(id: ID!): Note
+    updateNote(id: ID!, title: String!, content: JSON!): Note
     login(email: String!): LoginRequest
     verifyLogin(token: String!): LoginRequest
     createGem(url: String!, tags: [String], favorite: Boolean): Gem!
-    deleteGem(id: ID!): Gem!
+    deleteGem(id: ID!): Gem
     toggleFavoriteGem(id: ID!): Gem!
   }
 `

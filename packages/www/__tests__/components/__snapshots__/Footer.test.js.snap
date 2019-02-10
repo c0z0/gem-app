@@ -77,7 +77,7 @@ exports[`Footer matches snapshot 1`] = `
 }
 
 <div>
-  <div
+  <footer
     class="c0"
   >
     <div
@@ -106,6 +106,6 @@ exports[`Footer matches snapshot 1`] = `
         </a>
       </p>
     </div>
-  </div>
+  </footer>
 </div>
 `;

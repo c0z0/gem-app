@@ -122,7 +122,7 @@ export default function Login() {
                   onChange={({ target: { value } }) => setEmail(value)}
                 />
               </div>
-              <Button type="submit" disabled={loading}>
+              <Button type="submit" disabled={loading || !emailState.length}>
                 {!loading ? 'Continue' : ['Loading', <LoadingElipsis />]}
               </Button>
             </form>
