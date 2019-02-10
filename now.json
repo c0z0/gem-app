@@ -8,6 +8,7 @@
   ],
   "routes": [
     {"src": "/api", "dest": "packages/api/src/index.js"},
+    {"src": "/editor/(.+)", "dest": "packages/www/editor?n=$1"},
     {"src": "/(.*)", "dest": "packages/www/$1"}
   ],
   "env": {

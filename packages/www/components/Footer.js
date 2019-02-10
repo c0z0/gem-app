@@ -13,7 +13,7 @@ const FooterContainer = styled(Container)`
   }
 `
 
-const Border = styled.div`
+const Border = styled.footer`
   background: #fafafa;
   border-top: solid 1px #eaeaea;
   padding: 48px 0;

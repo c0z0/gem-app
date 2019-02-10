@@ -2,6 +2,8 @@ const jwt = require('jsonwebtoken')
 
 const User = require('./models/User')
 const Gem = require('./models/Gem')
+const GraphQLJSON = require('graphql-type-json')
+const Note = require('./models/Note')
 const LoginRequest = require('./models/LoginRequest')
 const { sendEmail, fetchTitle, validateUrl } = require('./utils')
 
@@ -15,7 +17,9 @@ module.exports = {
 
       return loginRequest
     },
-    viewer: (_, __, { viewer }) => viewer
+    viewer: (_, __, { viewer }) => viewer,
+    note: async (_, { id }, { viewer }) =>
+      await Note.findOne({ _id: id, userId: viewer._id })
   },
   Mutation: {
     login: async (_, { email }) => {
@@ -50,6 +54,10 @@ module.exports = {
 
       return newLoginRequest
     },
+    createNote: async (_, __, { viewer }) =>
+      await Note.create({
+        userId: viewer._id
+      }),
     createGem: async (_, { url, tags, favorite }, { viewer }) => {
       const parsedUrl = validateUrl(url)
 
@@ -71,9 +79,16 @@ module.exports = {
 
       return gem
     },
-    deleteGem: async (_, { id }, { viewer }) => {
-      return await Gem.findOneAndDelete({ _id: id, userId: viewer._id })
-    },
+    deleteGem: async (_, { id }, { viewer }) =>
+      await Gem.findOneAndDelete({ _id: id, userId: viewer._id }),
+    deleteNote: async (_, { id }, { viewer }) =>
+      await Note.findOneAndDelete({ _id: id, userId: viewer._id }),
+    updateNote: async (_, { id, content, title }, { viewer }) =>
+      await Note.findOneAndUpdate(
+        { userId: viewer._id, _id: id },
+        { content, title },
+        { new: true }
+      ),
     toggleFavoriteGem: async (_, { id }, { viewer }) => {
       const gem = await Gem.findOne({ _id: id, userId: viewer._id })
       const newGem = await Gem.findByIdAndUpdate(
@@ -94,11 +109,18 @@ module.exports = {
     owner: async ({ userId }) => await User.findById(userId),
     favorite: ({ favorite }) => true && favorite
   },
+  Note: {
+    id: ({ _id }) => _id,
+    owner: async ({ userId }) => await User.findById(userId)
+  },
   User: {
     id: ({ _id }) => _id,
     gems: async ({ _id }, { tagged }) =>
-      (await Gem.find({ userId: _id }).sort('createdAt'))
-        .filter(g => !tagged || g.tags.includes(tagged))
-        .reverse()
-  }
+      (await Gem.find({ userId: _id }).sort('-createdAt')).filter(
+        g => !tagged || g.tags.includes(tagged)
+      ),
+    notes: async ({ _id }) =>
+      await Note.find({ userId: _id }).sort('-createdAt')
+  },
+  JSON: GraphQLJSON
 }
