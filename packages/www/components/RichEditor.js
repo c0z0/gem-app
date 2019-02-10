@@ -200,7 +200,7 @@ export default function RichEditor({
           }
         >
           <Editor
-            // placeholder="Start writing your thoughts..."
+            placeholder="Start writing your thoughts..."
             ref={editorRef}
             renderNode={renderNode}
             renderMark={renderMark}

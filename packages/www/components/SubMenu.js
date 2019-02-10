@@ -57,6 +57,10 @@ const MenuItem = styled.a`
   &:hover {
     color: #484848;
   }
+
+  @media (${({ theme }) => theme.b.phoneOnly}) {
+    margin-left: 0;
+  }
 `
 const Diamond = styled.img.attrs({
   src: '/static/diamond.svg'
