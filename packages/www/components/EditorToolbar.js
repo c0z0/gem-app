@@ -57,6 +57,10 @@ const SaveStatus = styled.span`
   color: #ddd;
   align-self: center;
   margin-left: 8px;
+  @media (${({ theme }) => theme.b.phoneOnly}) {
+    flex: 1;
+    text-align: right;
+  }
 `
 
 const Controls = styled.div`
@@ -77,6 +81,10 @@ const BackButton = styled.a`
   text-decoration: none;
   align-items: center;
   transition: all 0.2s;
+
+  @media (${({ theme }) => theme.b.phoneOnly}) {
+    flex: 1;
+  }
 
   :hover {
     color: #484848;

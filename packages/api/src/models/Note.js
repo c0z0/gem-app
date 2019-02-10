@@ -7,7 +7,7 @@ const NoteSchema = new mongoose.Schema({
     type: String,
     required: true,
     default:
-      '{"object":"value","document":{"object":"document","data":{},"nodes":[{"object":"block","type":"paragraph","data":{},"nodes":[{"object":"text","leaves":[{"object":"leaf","text":"Start writing your thoughts...","marks":[]}]}]}]}}'
+      '{"object":"value","document":{"object":"document","data":{},"nodes":[{"object":"block","type":"paragraph","data":{},"nodes":[{"object":"text","leaves":[{"object":"leaf","text":"","marks":[]}]}]}]}}'
   },
   createdAt: { type: Date, required: true, default: Date.now },
   lastEdited: { type: Date, required: true, default: Date.now }

@@ -66,10 +66,11 @@ export default function Notes() {
         mutation={CREATE_MUTATION}
         optimisticResponse={{
           __typename: 'Mutation',
-          createGem: {
+          createNote: {
             __typename: 'Note',
             id: 'optimistic-id',
-            title: 'New Note'
+            title: 'New Note',
+            content: ''
           }
         }}
         update={(cache, { data: { createNote } }) => {
@@ -135,7 +136,7 @@ export default function Notes() {
                           variables: { id },
                           optimisticResponse: {
                             __typename: 'Mutation',
-                            deleteGem: {
+                            deleteNote: {
                               __typename: 'Note',
                               id
                             }
