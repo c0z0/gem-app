@@ -208,7 +208,7 @@ export default function RichEditor({
             onChange={({ value }) => {
               if (editorState.document !== value.document)
                 onChange({
-                  content: JSON.stringify(editorState.toJSON()),
+                  content: JSON.stringify(value.toJSON()),
                   title: titleState,
                   id
                 })
