@@ -7,6 +7,7 @@ import memoize from 'lodash.memoize'
 import PropTypes from 'prop-types'
 
 import Menu from './Menu'
+import Folder from './Folder'
 import { Title, LoadingElipsis, H1 } from './Typography'
 import Toolbar from './Toolbar'
 import Container from './Container'
@@ -44,17 +45,36 @@ const QUERY = gql`
       id
       gems {
         id
+        folderId
         favorite
         title
         displayUrl
         href
         tags
       }
+      folders {
+        title
+        id
+      }
     }
   }
 `
 
-const DELETE_MUTATION = gql`
+const MOVE_GEM_MUTATION = gql`
+  mutation MoveGem($id: ID!, $folderId: ID) {
+    moveGem(id: $id, folderId: $folderId) {
+      id
+      title
+      displayUrl
+      folderId
+      href
+      favorite
+      tags
+    }
+  }
+`
+
+const DELETE_GEM_MUTATION = gql`
   mutation Delete($id: ID!) {
     deleteGem(id: $id) {
       id
@@ -62,12 +82,13 @@ const DELETE_MUTATION = gql`
   }
 `
 
-const CREATE_MUTATION = gql`
+const CREATE_GEM_MUTATION = gql`
   mutation Create($tags: [String]!, $url: String!, $favorite: Boolean) {
     createGem(url: $url, tags: $tags, favorite: $favorite) {
       id
       title
       displayUrl
+      folderId
       href
       favorite
       tags
@@ -119,7 +140,7 @@ export default function GemList({ favorites }) {
         }}
       />
       <Mutation
-        mutation={CREATE_MUTATION}
+        mutation={CREATE_GEM_MUTATION}
         update={(cache, { data: { createGem } }) => {
           const { viewer } = cache.readQuery({ query: QUERY })
 
@@ -143,6 +164,7 @@ export default function GemList({ favorites }) {
                     __typename: 'Gem',
                     id: 'optimistic-id',
                     displayUrl: isValidUrl(url).host,
+                    folderId: null,
                     favorite: favorites,
                     title: 'Loading...',
                     href: url,
@@ -188,7 +210,7 @@ export default function GemList({ favorites }) {
         >
           {toggleFavorite => (
             <Mutation
-              mutation={DELETE_MUTATION}
+              mutation={DELETE_GEM_MUTATION}
               update={(
                 cache,
                 {
@@ -207,66 +229,91 @@ export default function GemList({ favorites }) {
               }}
             >
               {deleteGem => (
-                <Query query={QUERY}>
-                  {({ data, loading }) => {
-                    if (loading)
-                      return (
-                        <Title style={{ textAlign: 'center' }}>
-                          <LoadingElipsis />
-                        </Title>
-                      )
+                <Mutation mutation={MOVE_GEM_MUTATION}>
+                  {moveGem => (
+                    <Query query={QUERY}>
+                      {({ data, loading }) => {
+                        if (loading)
+                          return (
+                            <Title style={{ textAlign: 'center' }}>
+                              <LoadingElipsis />
+                            </Title>
+                          )
 
-                    const gems = memoizedFilterGems(
-                      data.viewer.gems,
-                      searchQuery,
-                      favorites
-                    )
+                        const gems = memoizedFilterGems(
+                          data.viewer.gems,
+                          searchQuery,
+                          favorites
+                        )
 
-                    if (!gems.length)
-                      return (
-                        <NoGems>
-                          {searchQuery.length
-                            ? 'No Gems found.'
-                            : 'No saved Gems.'}
-                        </NoGems>
-                      )
+                        if (!gems.length)
+                          return (
+                            <NoGems>
+                              {searchQuery.length
+                                ? 'No Gems found.'
+                                : 'No saved Gems.'}
+                            </NoGems>
+                          )
 
-                    return gems.map(g => (
-                      <Gem
-                        onTagClick={t =>
-                          setSearchQuery(`${searchQuery} tag:${t}`.trim())
-                        }
-                        key={g.id}
-                        {...g}
-                        onToggleFavorite={({ id, favorite }) => {
-                          toggleFavorite({
-                            variables: { id },
-                            optimisticResponse: {
-                              __typename: 'Mutation',
-                              toggleFavoriteGem: {
-                                __typename: 'Gem',
-                                id,
-                                favorite: !favorite
-                              }
+                        const renderGem = g => (
+                          <Gem
+                            onTagClick={t =>
+                              setSearchQuery(`${searchQuery} tag:${t}`.trim())
                             }
-                          })
-                        }}
-                        onDelete={id =>
-                          deleteGem({
-                            variables: { id },
-                            optimisticResponse: {
-                              __typename: 'Mutation',
-                              deleteGem: {
-                                __typename: 'Gem',
-                                id
-                              }
+                            key={g.id}
+                            {...g}
+                            onToggleFavorite={({ id, favorite }) => {
+                              toggleFavorite({
+                                variables: { id },
+                                optimisticResponse: {
+                                  __typename: 'Mutation',
+                                  toggleFavoriteGem: {
+                                    __typename: 'Gem',
+                                    id,
+                                    favorite: !favorite
+                                  }
+                                }
+                              })
+                            }}
+                            folders={data.viewer.folders.filter(
+                              f => f.id !== g.folderId
+                            )}
+                            onMoveGem={({ id, folderId }) =>
+                              moveGem({
+                                variables: { id, folderId }
+                              })
                             }
-                          })
-                        }
-                      />
-                    ))
-                  }}
-                </Query>
+                            onDelete={id =>
+                              deleteGem({
+                                variables: { id },
+                                optimisticResponse: {
+                                  __typename: 'Mutation',
+                                  deleteGem: {
+                                    __typename: 'Gem',
+                                    id
+                                  }
+                                }
+                              })
+                            }
+                          />
+                        )
+
+                        return (
+                          <React.Fragment>
+                            {data.viewer.folders.map(f => (
+                              <Folder key={f.id} {...f}>
+                                {gems
+                                  .filter(g => g.folderId === f.id)
+                                  .map(renderGem)}
+                              </Folder>
+                            ))}
+                            {gems.filter(g => !g.folderId).map(renderGem)}
+                          </React.Fragment>
+                        )
+                      }}
+                    </Query>
+                  )}
+                </Mutation>
               )}
             </Mutation>
           )}

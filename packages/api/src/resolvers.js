@@ -2,6 +2,7 @@ const jwt = require('jsonwebtoken')
 
 const User = require('./models/User')
 const Gem = require('./models/Gem')
+const Folder = require('./models/Folder')
 const GraphQLJSON = require('graphql-type-json')
 const Note = require('./models/Note')
 const LoginRequest = require('./models/LoginRequest')
@@ -58,6 +59,8 @@ module.exports = {
       await Note.create({
         userId: viewer._id
       }),
+    createFolder: async (_, { title }, { viewer }) =>
+      await Folder.create({ userId: viewer._id, title }),
     createGem: async (_, { url, tags, favorite }, { viewer }) => {
       const parsedUrl = validateUrl(url)
 
@@ -83,6 +86,8 @@ module.exports = {
       await Gem.findOneAndDelete({ _id: id, userId: viewer._id }),
     deleteNote: async (_, { id }, { viewer }) =>
       await Note.findOneAndDelete({ _id: id, userId: viewer._id }),
+    deleteFolder: async (_, { id }, { viewer }) =>
+      await Folder.findOneAndDelete({ _id: id, userId: viewer._id }),
     updateNote: async (_, { id, content, title }, { viewer }) =>
       await Note.findOneAndUpdate(
         { userId: viewer._id, _id: id },
@@ -94,6 +99,15 @@ module.exports = {
       const newGem = await Gem.findByIdAndUpdate(
         gem._id,
         { favorite: !gem.favorite },
+        { new: true }
+      )
+
+      return newGem
+    },
+    moveGem: async (_, { id, folderId }) => {
+      const newGem = await Gem.findByIdAndUpdate(
+        id,
+        { folderId },
         { new: true }
       )
 
@@ -120,7 +134,13 @@ module.exports = {
         g => !tagged || g.tags.includes(tagged)
       ),
     notes: async ({ _id }) =>
-      await Note.find({ userId: _id }).sort('-createdAt')
+      await Note.find({ userId: _id }).sort('-createdAt'),
+    folders: async ({ _id }) =>
+      await Folder.find({ userId: _id }).sort('-createdAt')
+  },
+  Folder: {
+    id: ({ _id }) => _id,
+    owner: async ({ userId }) => await User.findById(userId)
   },
   JSON: GraphQLJSON
 }
