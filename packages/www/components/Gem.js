@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import styled, { keyframes } from 'styled-components'
 import PropTypes from 'prop-types'
 
@@ -168,14 +168,27 @@ export default function Gem({
   const [optionsState, setOptions] = useState(false)
   const [moveMenu, setMoveMenu] = useState(false)
   const [showNewFolder, setShowNewFolder] = useState(false)
+  const menuRef = useRef(null)
+
   // const [newFolderTitle, setNewFolderTitle] = useState('')
 
-  const menuRef = useRef(null)
+  useEffect(() => {
+    function listener(e) {
+      if (menuRef.current.contains(e.target)) return
+
+      setOptions(false)
+      setMoveMenu(false)
+    }
+
+    window.addEventListener('click', listener)
+
+    return () => window.removeEventListener('click', listener)
+  }, [])
 
   return (
     <FakeMargin draggable onDrag={onDrag} onDragEnd={onDragEnd}>
       <Container>
-        <OptionsContainer>
+        <OptionsContainer id="gem-options-menu" ref={menuRef}>
           <OptionsButton
             onClick={() => {
               setOptions(!optionsState)
@@ -185,7 +198,7 @@ export default function Gem({
             <Dots />
           </OptionsButton>
 
-          <Menu visible={optionsState} ref={menuRef}>
+          <Menu visible={optionsState}>
             {moveMenu ? (
               showNewFolder ? (
                 <React.Fragment>
@@ -225,7 +238,12 @@ export default function Gem({
                 <MenuItem onClick={() => onToggleFavorite({ id, favorite })}>
                   {favorite ? 'Remove from favorites' : 'Add to favorites'}
                 </MenuItem>
-                <MenuItem onClick={() => setMoveMenu(true)}>
+                <MenuItem
+                  onClick={e => {
+                    e.stopPropagation()
+                    setMoveMenu(true)
+                  }}
+                >
                   Move to folder
                 </MenuItem>
                 <MenuItem red onClick={() => onDelete(id)}>

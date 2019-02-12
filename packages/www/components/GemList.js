@@ -64,12 +64,7 @@ const MOVE_GEM_MUTATION = gql`
   mutation MoveGem($id: ID!, $folderId: ID) {
     moveGem(id: $id, folderId: $folderId) {
       id
-      title
-      displayUrl
       folderId
-      href
-      favorite
-      tags
     }
   }
 `
@@ -280,7 +275,15 @@ export default function GemList({ favorites }) {
                             )}
                             onMoveGem={({ id, folderId }) =>
                               moveGem({
-                                variables: { id, folderId }
+                                variables: { id, folderId },
+                                optimisticResponse: {
+                                  __typename: 'Mutation',
+                                  moveGem: {
+                                    __typename: 'Gem',
+                                    id,
+                                    folderId
+                                  }
+                                }
                               })
                             }
                             onDelete={id =>

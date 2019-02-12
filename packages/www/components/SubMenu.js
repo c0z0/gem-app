@@ -134,13 +134,13 @@ export default function SubMenu({ controls, children, active }) {
           </ControlsContainer>
         </SearchContainer>
         <MenuContainer>
-          <Link href="/" passHref>
+          <Link href="/" passHref prefetch>
             <MenuItem active={active === '/'}>My Gems</MenuItem>
           </Link>
-          <Link href="/favorites" passHref>
+          <Link href="/favorites" passHref prefetch>
             <MenuItem active={active === '/favorites'}>Favorites</MenuItem>
           </Link>
-          <Link href="/notes" passHref>
+          <Link href="/notes" passHref prefetch>
             <MenuItem active={active === '/notes'}>
               <Badge>New</Badge>
               Notes
