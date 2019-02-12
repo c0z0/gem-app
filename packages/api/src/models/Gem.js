@@ -7,7 +7,8 @@ const GemSchema = new mongoose.Schema({
   title: { type: String, required: false },
   tags: { type: Array, required: true, default: [] },
   createdAt: { type: Date, required: true, default: Date.now },
-  favorite: { type: Boolean, required: true, default: false }
+  favorite: { type: Boolean, required: true, default: false },
+  folderId: { type: mongoose.Schema.Types.ObjectId, required: false }
 })
 
 module.exports = mongoose.model('Gem', GemSchema)

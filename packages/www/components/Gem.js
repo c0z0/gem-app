@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useRef } from 'react'
 import styled, { keyframes } from 'styled-components'
 import PropTypes from 'prop-types'
 
@@ -17,20 +17,19 @@ const copyToClipboard = str => {
 }
 
 const Container = styled.div`
-  margin: 28px 0;
   padding-right: 18px;
+  padding-bottom: 28px;
   position: relative;
   color: #ddd;
+`
 
-  &:first-child {
-    margin-top: 48px;
-  }
+const FakeMargin = styled.div`
+  padding: 14px 0;
 
-  &:not(:last-child) {
+  &:not(:last-child) ${Container} {
     border-bottom: 1px solid #eee;
   }
 `
-
 const Title = styled.a`
   color: ${({ theme }) => theme.main};
   text-decoration: none;
@@ -45,12 +44,16 @@ const OptionsButton = styled.button`
   background: none;
   border: none;
   outline: none;
+
+  cursor: pointer;
+  transition: all 0.2s;
+`
+
+const OptionsContainer = styled.div`
   position: absolute;
   top: -4px;
   right: -4px;
   padding: 8px;
-  cursor: pointer;
-  transition: all 0.2s;
 `
 
 const Url = styled.a`
@@ -113,6 +116,7 @@ const Menu = styled.ul`
 const MenuItem = styled.li`
   padding: 0 18px;
   font-size: 14px;
+  cursor: pointer;
   white-space: nowrap;
   line-height: 40px;
   color: ${({ red }) => (red ? 'red' : '#484848')};
@@ -127,14 +131,13 @@ const MenuItem = styled.li`
     background: #fafafa;
   }
 
-  &:not(:first-child) {
-    border-radius: 0 0 5px 5px;
-    border-top: 1px #ddd solid;
+  &:not(:last-child) {
+    border-radius: 5px 5px 0 0;
+    border-bottom: 1px #ddd solid;
   }
 `
 
 const Tags = styled.div`
-  margin-bottom: 28px;
   margin-top: 8px;
   display: flex;
   align-items: center;
@@ -155,83 +158,137 @@ export default function Gem({
   onDelete,
   id,
   onTagClick,
-  onToggleFavorite
+  onToggleFavorite,
+  onDrag,
+  onDragEnd,
+  onMoveGem,
+  folderId,
+  folders
 }) {
   const [optionsState, setOptions] = useState(false)
+  const [moveMenu, setMoveMenu] = useState(false)
+  const [showNewFolder, setShowNewFolder] = useState(false)
+  // const [newFolderTitle, setNewFolderTitle] = useState('')
+
   const menuRef = useRef(null)
 
-  useEffect(() => {
-    function clickEvent(e) {
-      let targetElement = e.target
-      const flyoutElement = menuRef.current
-
-      do {
-        if (targetElement === flyoutElement) {
-          return
-        }
-        targetElement = targetElement.parentNode
-      } while (targetElement)
-
-      if (optionsState) setOptions(false)
-    }
-    document.addEventListener('click', clickEvent)
-
-    return () => document.removeEventListener('click', clickEvent)
-  })
-
   return (
-    <Container>
-      <OptionsButton onClick={() => setOptions(!optionsState)}>
-        <Dots />
-        <Menu visible={optionsState} ref={menuRef}>
-          <MenuItem onClick={() => copyToClipboard(href)}>
-            Copy to clipboard
-          </MenuItem>
-          <MenuItem onClick={() => onToggleFavorite({ id, favorite })}>
-            {favorite ? 'Remove from favorites' : 'Add to favorites'}
-          </MenuItem>
-          <MenuItem red onClick={() => onDelete(id)}>
-            Delete
-          </MenuItem>
-        </Menu>
-      </OptionsButton>
-      <div>
-        <Title href={href}>
-          {id === 'optimistic-id' ? (
-            <React.Fragment>
-              Loading
-              <LoadingElipsis />
-            </React.Fragment>
-          ) : (
-            title
+    <FakeMargin draggable onDrag={onDrag} onDragEnd={onDragEnd}>
+      <Container>
+        <OptionsContainer>
+          <OptionsButton
+            onClick={() => {
+              setOptions(!optionsState)
+              setMoveMenu(false)
+            }}
+          >
+            <Dots />
+          </OptionsButton>
+
+          <Menu visible={optionsState} ref={menuRef}>
+            {moveMenu ? (
+              showNewFolder ? (
+                <React.Fragment>
+                  <MenuItem onClick={() => setShowNewFolder(false)}>
+                    Back
+                  </MenuItem>
+                </React.Fragment>
+              ) : (
+                <React.Fragment>
+                  <MenuItem onClick={() => setMoveMenu(false)}>Back</MenuItem>
+                  <MenuItem
+                    onClick={() => setShowNewFolder(true)}
+                    style={{ marginBottom: '8px' }}
+                  >
+                    New folder
+                  </MenuItem>
+                  {folders.map(f => (
+                    <MenuItem
+                      key={f.id}
+                      onClick={() => onMoveGem({ id, folderId: f.id })}
+                    >
+                      {f.title}
+                    </MenuItem>
+                  ))}
+                  {folderId && (
+                    <MenuItem onClick={() => onMoveGem({ id, folderId: null })}>
+                      Remove from folder
+                    </MenuItem>
+                  )}
+                </React.Fragment>
+              )
+            ) : (
+              <React.Fragment>
+                <MenuItem onClick={() => copyToClipboard(href)}>
+                  Copy to clipboard
+                </MenuItem>
+                <MenuItem onClick={() => onToggleFavorite({ id, favorite })}>
+                  {favorite ? 'Remove from favorites' : 'Add to favorites'}
+                </MenuItem>
+                <MenuItem onClick={() => setMoveMenu(true)}>
+                  Move to folder
+                </MenuItem>
+                <MenuItem red onClick={() => onDelete(id)}>
+                  Delete
+                </MenuItem>
+              </React.Fragment>
+            )}
+          </Menu>
+        </OptionsContainer>
+        <div>
+          <Title href={href}>
+            {id === 'optimistic-id' ? (
+              <React.Fragment>
+                Loading
+                <LoadingElipsis />
+              </React.Fragment>
+            ) : (
+              title
+            )}
+          </Title>{' '}
+          | <Url href={href}>{displayUrl}</Url>
+        </div>
+        <Tags>
+          {favorite && (
+            <Star onClick={() => onToggleFavorite({ id, favorite })} />
           )}
-        </Title>{' '}
-        | <Url href={href}>{displayUrl}</Url>
-      </div>
-      <Tags>
-        {favorite && (
-          <Star onClick={() => onToggleFavorite({ id, favorite })} />
-        )}
-        {!tags.length
-          ? 'No tags...'
-          : tags.map(t => (
-              <Tag key={t} onClick={() => onTagClick(t)}>
-                {t}
-              </Tag>
-            ))}
-      </Tags>
-    </Container>
+          {!tags.length
+            ? 'No tags...'
+            : tags.map(t => (
+                <Tag key={t} onClick={() => onTagClick(t)}>
+                  {t}
+                </Tag>
+              ))}
+        </Tags>
+      </Container>
+    </FakeMargin>
   )
+}
+
+Gem.defaultProps = {
+  folderId: null,
+  onDrag: () => {},
+  onDragEnd: () => {}
 }
 
 Gem.propTypes = {
   id: PropTypes.string.isRequired,
+  folderId: PropTypes.string,
   title: PropTypes.string.isRequired,
   href: PropTypes.string.isRequired,
   displayUrl: PropTypes.string.isRequired,
   favorite: PropTypes.bool.isRequired,
   tags: PropTypes.arrayOf(PropTypes.string).isRequired,
+  folders: PropTypes.arrayOf(
+    PropTypes.shape({
+      title: PropTypes.string,
+      id: PropTypes.string
+    })
+  ).isRequired,
   onDelete: PropTypes.func.isRequired,
+  onDrag: PropTypes.func,
+  onDragEnd: PropTypes.func,
   onTagClick: PropTypes.func.isRequired,
-  onToggleFavorite: PropTypes.func.isRequired
+  onToggleFavorite: PropTypes.func.isRequired,
+  onMoveGem: PropTypes.func.isRequired
 }
