@@ -3,6 +3,8 @@ import { ThemeProvider } from 'styled-components'
 import Head from 'next/head'
 import React from 'react'
 import { ApolloProvider } from 'react-apollo'
+import { ApolloProvider as ApolloHooksProvider } from 'react-apollo-hooks'
+
 import withApollo from '../lib/withApollo'
 
 import theme from '../lib/theme'
@@ -16,9 +18,11 @@ class MyApp extends App {
           <title>Gem - Keep your online finds</title>
         </Head>
         <ApolloProvider client={apolloClient}>
-          <ThemeProvider theme={theme}>
-            <Component {...pageProps} />
-          </ThemeProvider>
+          <ApolloHooksProvider client={apolloClient}>
+            <ThemeProvider theme={theme}>
+              <Component {...pageProps} />
+            </ThemeProvider>
+          </ApolloHooksProvider>
         </ApolloProvider>
       </Container>
     )

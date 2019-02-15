@@ -1,7 +1,8 @@
 import React, { useState } from 'react'
+import PropTypes from 'prop-types'
 import Router from 'next/router'
 import styled from 'styled-components'
-import { Mutation, Query } from 'react-apollo'
+import { useQuery, useMutation } from 'react-apollo-hooks'
 import gql from 'graphql-tag'
 import cookie from 'cookie'
 
@@ -93,82 +94,42 @@ const TextWrapper = styled.div`
 
 export default function Login() {
   const [emailState, setEmail] = useState('')
+  const [loadingState, setLoadingState] = useState(false)
   const [loginState, setLogin] = useState(null)
+
+  const login = useMutation(LOGIN_MUTATION, {
+    update: (_, { data }) => {
+      setLogin(data.login)
+      setLoadingState(false)
+    }
+  })
 
   function renderForm() {
     return (
-      <Mutation
-        mutation={LOGIN_MUTATION}
-        update={(_, { data }) => {
-          setLogin(data.login)
-        }}
-      >
-        {(login, { loading }) => (
-          <TextWrapper>
-            <form
-              onSubmit={e => {
-                e.preventDefault()
-                login({ variables: { email: emailState } })
-              }}
-            >
-              <Title>Welcome to Gem</Title>
-              <P>Enter your email address to get started</P>
-              <div>
-                <Input
-                  disabled={loading}
-                  placeholder="you@domain.com"
-                  value={emailState}
-                  type="email"
-                  onChange={({ target: { value } }) => setEmail(value)}
-                />
-              </div>
-              <Button type="submit" disabled={loading || !emailState.length}>
-                {!loading ? 'Continue' : ['Loading', <LoadingElipsis />]}
-              </Button>
-            </form>
-          </TextWrapper>
-        )}
-      </Mutation>
-    )
-  }
-
-  function renderVerification() {
-    return (
-      <Query
-        query={LOGIN_QUERY}
-        variables={{ id: loginState.id }}
-        pollInterval={1000}
-      >
-        {({ data, loading }) => {
-          if (!loading && !data.checkLogin.pending) {
-            document.cookie = cookie.serialize(
-              'session',
-              data.checkLogin.token,
-              {
-                maxAge: 60 * 60 * 24 * 28 // 4 weeks
-              }
-            )
-            Router.replace('/')
-          }
-          return (
-            <TextWrapper>
-              <Title>Awaiting Verification</Title>
-              <P>
-                We sent an email to <b>{loginState.user.email}</b>.
-              </P>
-              <P>
-                Please log in to your inbox, verify that the provided security
-                code matches the following text:{' '}
-                <b>{loginState.verificationCode}</b>
-              </P>
-              <P>
-                Waiting for your confirmation
-                <LoadingElipsis />
-              </P>
-            </TextWrapper>
-          )
-        }}
-      </Query>
+      <TextWrapper>
+        <form
+          onSubmit={e => {
+            e.preventDefault()
+            setLoadingState(true)
+            login({ variables: { email: emailState } })
+          }}
+        >
+          <Title>Welcome to Gem</Title>
+          <P>Enter your email address to get started</P>
+          <div>
+            <Input
+              disabled={loadingState}
+              placeholder="you@domain.com"
+              value={emailState}
+              type="email"
+              onChange={({ target: { value } }) => setEmail(value)}
+            />
+          </div>
+          <Button type="submit" disabled={loadingState || !emailState.length}>
+            {!loadingState ? 'Continue' : ['Loading', <LoadingElipsis />]}
+          </Button>
+        </form>
+      </TextWrapper>
     )
   }
 
@@ -179,13 +140,65 @@ export default function Login() {
         <Half>
           <Diamond />
         </Half>
-        <Half>{!loginState ? renderForm() : renderVerification()}</Half>
+        <Half>
+          {!loginState ? (
+            renderForm()
+          ) : (
+            <Verification loginState={loginState} />
+          )}
+        </Half>
       </Wrapper>
     </Container>
   )
 }
+
 Login.getInitialProps = async ctx => {
   await redirectLogin(ctx, '/', false)
 
   return {}
+}
+
+function Verification({ loginState }) {
+  const { data, loading } = useQuery(LOGIN_QUERY, {
+    variables: { id: loginState.id },
+    pollInterval: 1000
+  })
+
+  if (!loading && !data.checkLogin.pending) {
+    document.cookie = cookie.serialize('session', data.checkLogin.token, {
+      maxAge: 60 * 60 * 24 * 28 // 4 weeks
+    })
+    Router.replace('/')
+  }
+
+  return (
+    <TextWrapper>
+      <Title>Awaiting Verification</Title>
+      <P>
+        We sent an email to <b>{loginState.user.email}</b>.
+      </P>
+      <P>
+        Please log in to your inbox, verify that the provided security code
+        matches the following text: <b>{loginState.verificationCode}</b>
+      </P>
+      <P>
+        Waiting for your confirmation
+        <LoadingElipsis />
+      </P>
+    </TextWrapper>
+  )
+}
+
+Verification.defaultProps = {
+  loginState: null
+}
+
+Verification.propTypes = {
+  loginState: PropTypes.shape({
+    id: PropTypes.string,
+    verificationCode: PropTypes.string,
+    user: PropTypes.shape({
+      email: PropTypes.string
+    })
+  })
 }
