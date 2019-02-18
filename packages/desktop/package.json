@@ -14,7 +14,8 @@
   },
   "scripts": {
     "start": "electron .",
-    "dist": "electron-builder"
+    "dist": "electron-builder",
+    "pack": "electron-builder --dir"
   },
   "devDependencies": {
     "electron-builder": "^20.38.5",
