@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Query, Mutation } from 'react-apollo'
+import { useQuery, useMutation } from 'react-apollo-hooks'
 import styled from 'styled-components'
 import Router from 'next/router'
 import gql from 'graphql-tag'
@@ -38,7 +38,7 @@ const TOGLE_FAVORITE_MUTATION = gql`
   }
 `
 
-const QUERY = gql`
+const GEMS_QUERY = gql`
   {
     viewer {
       email
@@ -125,6 +125,128 @@ export default function GemList({ favorites }) {
 
   const memoizedFilterGems = memoize(filterGems)
 
+  const { data, loading } = useQuery(GEMS_QUERY)
+
+  const createGem = useMutation(CREATE_GEM_MUTATION, {
+    update: (cache, { data: { createGem: createGemData } }) => {
+      const { viewer } = cache.readQuery({ query: GEMS_QUERY })
+
+      viewer.gems.unshift(createGemData)
+
+      cache.writeData({ query: GEMS_QUERY, data: { viewer } })
+    }
+  })
+
+  const toggleFavorite = useMutation(TOGLE_FAVORITE_MUTATION, {
+    update: (
+      cache,
+      {
+        data: {
+          toggleFavoriteGem: { favorite, id }
+        }
+      }
+    ) => {
+      const { viewer } = cache.readQuery({ query: GEMS_QUERY })
+
+      viewer.gems = viewer.gems.map(g => (g.id === id ? { ...g, favorite } : g))
+
+      cache.writeQuery({
+        query: GEMS_QUERY,
+        data: { viewer }
+      })
+    }
+  })
+
+  const deleteGem = useMutation(DELETE_GEM_MUTATION, {
+    update: (
+      cache,
+      {
+        data: {
+          deleteGem: { id }
+        }
+      }
+    ) => {
+      const { viewer } = cache.readQuery({ query: GEMS_QUERY })
+      viewer.gems = viewer.gems.filter(g => id !== g.id)
+
+      cache.writeQuery({
+        query: GEMS_QUERY,
+        data: { viewer }
+      })
+    }
+  })
+
+  const moveGem = useMutation(MOVE_GEM_MUTATION, {})
+
+  function renderGems() {
+    const gems = memoizedFilterGems(data.viewer.gems, searchQuery, favorites)
+
+    if (!gems.length)
+      return (
+        <NoGems>
+          {searchQuery.length ? 'No Gems found.' : 'No saved Gems.'}
+        </NoGems>
+      )
+
+    const renderGem = g => (
+      <Gem
+        onTagClick={t => setSearchQuery(`${searchQuery} tag:${t}`.trim())}
+        key={g.id}
+        {...g}
+        onToggleFavorite={({ id, favorite }) => {
+          toggleFavorite({
+            variables: { id },
+            optimisticResponse: {
+              __typename: 'Mutation',
+              toggleFavoriteGem: {
+                __typename: 'Gem',
+                id,
+                favorite: !favorite
+              }
+            }
+          })
+        }}
+        folders={data.viewer.folders.filter(f => f.id !== g.folderId)}
+        onMoveGem={({ id, folderId }) =>
+          moveGem({
+            variables: { id, folderId },
+            optimisticResponse: {
+              __typename: 'Mutation',
+              moveGem: {
+                __typename: 'Gem',
+                id,
+                folderId
+              }
+            }
+          })
+        }
+        onDelete={id =>
+          deleteGem({
+            variables: { id },
+            optimisticResponse: {
+              __typename: 'Mutation',
+              deleteGem: {
+                __typename: 'Gem',
+                id
+              }
+            }
+          })
+        }
+      />
+    )
+
+    return (
+      <React.Fragment>
+        {data.viewer.folders.map(f => (
+          <Folder key={f.id} {...f}>
+            {gems.filter(g => g.folderId === f.id).map(renderGem)}
+          </Folder>
+        ))}
+        {gems.filter(g => !g.folderId).map(renderGem)}
+      </React.Fragment>
+    )
+  }
+
   return (
     <React.Fragment>
       <Menu
@@ -134,193 +256,47 @@ export default function GemList({ favorites }) {
           Router.replace('/login')
         }}
       />
-      <Mutation
-        mutation={CREATE_GEM_MUTATION}
-        update={(cache, { data: { createGem } }) => {
-          const { viewer } = cache.readQuery({ query: QUERY })
 
-          viewer.gems.unshift(createGem)
-
-          cache.writeData({ query: QUERY, data: { viewer } })
+      <Toolbar
+        searchQuery={searchQuery}
+        onSearchQueryChange={setSearchQuery}
+        newGem={newGem}
+        favorites={favorites}
+        onNewGemSubmit={({ url, tags }) => {
+          setNewGem({ url: '', tags: [] })
+          createGem({
+            optimisticResponse: {
+              __typename: 'Mutation',
+              createGem: {
+                __typename: 'Gem',
+                id: 'optimistic-id',
+                displayUrl: isValidUrl(url).host,
+                folderId: null,
+                favorite: favorites,
+                title: 'Loading...',
+                href: url,
+                tags: tags.map(t => t.trim()).filter(t => t.length > 0)
+              }
+            },
+            variables: {
+              url,
+              tags: tags.map(t => t.trim()).filter(t => t.length > 0),
+              favorite: favorites
+            }
+          })
         }}
-      >
-        {createGem => (
-          <Toolbar
-            searchQuery={searchQuery}
-            onSearchQueryChange={setSearchQuery}
-            newGem={newGem}
-            favorites={favorites}
-            onNewGemSubmit={({ url, tags }) => {
-              setNewGem({ url: '', tags: [] })
-              createGem({
-                optimisticResponse: {
-                  __typename: 'Mutation',
-                  createGem: {
-                    __typename: 'Gem',
-                    id: 'optimistic-id',
-                    displayUrl: isValidUrl(url).host,
-                    folderId: null,
-                    favorite: favorites,
-                    title: 'Loading...',
-                    href: url,
-                    tags: tags.map(t => t.trim()).filter(t => t.length > 0)
-                  }
-                },
-                variables: {
-                  url,
-                  tags: tags.map(t => t.trim()).filter(t => t.length > 0),
-                  favorite: favorites
-                }
-              })
-            }}
-            onNewGemChange={setNewGem}
-            newGemLoading={false}
-          />
-        )}
-      </Mutation>
+        onNewGemChange={setNewGem}
+        newGemLoading={false}
+      />
       <GemsContainer>
         <H1>{favorites ? 'Favorite' : 'My'} Gems</H1>
-
-        <Mutation
-          mutation={TOGLE_FAVORITE_MUTATION}
-          update={(
-            cache,
-            {
-              data: {
-                toggleFavoriteGem: { favorite, id }
-              }
-            }
-          ) => {
-            const { viewer } = cache.readQuery({ query: QUERY })
-
-            viewer.gems = viewer.gems.map(g =>
-              g.id === id ? { ...g, favorite } : g
-            )
-
-            cache.writeQuery({
-              query: QUERY,
-              data: { viewer }
-            })
-          }}
-        >
-          {toggleFavorite => (
-            <Mutation
-              mutation={DELETE_GEM_MUTATION}
-              update={(
-                cache,
-                {
-                  data: {
-                    deleteGem: { id }
-                  }
-                }
-              ) => {
-                const { viewer } = cache.readQuery({ query: QUERY })
-                viewer.gems = viewer.gems.filter(g => id !== g.id)
-
-                cache.writeQuery({
-                  query: QUERY,
-                  data: { viewer }
-                })
-              }}
-            >
-              {deleteGem => (
-                <Mutation mutation={MOVE_GEM_MUTATION}>
-                  {moveGem => (
-                    <Query query={QUERY}>
-                      {({ data, loading }) => {
-                        if (loading)
-                          return (
-                            <Title style={{ textAlign: 'center' }}>
-                              <LoadingElipsis />
-                            </Title>
-                          )
-
-                        const gems = memoizedFilterGems(
-                          data.viewer.gems,
-                          searchQuery,
-                          favorites
-                        )
-
-                        if (!gems.length)
-                          return (
-                            <NoGems>
-                              {searchQuery.length
-                                ? 'No Gems found.'
-                                : 'No saved Gems.'}
-                            </NoGems>
-                          )
-
-                        const renderGem = g => (
-                          <Gem
-                            onTagClick={t =>
-                              setSearchQuery(`${searchQuery} tag:${t}`.trim())
-                            }
-                            key={g.id}
-                            {...g}
-                            onToggleFavorite={({ id, favorite }) => {
-                              toggleFavorite({
-                                variables: { id },
-                                optimisticResponse: {
-                                  __typename: 'Mutation',
-                                  toggleFavoriteGem: {
-                                    __typename: 'Gem',
-                                    id,
-                                    favorite: !favorite
-                                  }
-                                }
-                              })
-                            }}
-                            folders={data.viewer.folders.filter(
-                              f => f.id !== g.folderId
-                            )}
-                            onMoveGem={({ id, folderId }) =>
-                              moveGem({
-                                variables: { id, folderId },
-                                optimisticResponse: {
-                                  __typename: 'Mutation',
-                                  moveGem: {
-                                    __typename: 'Gem',
-                                    id,
-                                    folderId
-                                  }
-                                }
-                              })
-                            }
-                            onDelete={id =>
-                              deleteGem({
-                                variables: { id },
-                                optimisticResponse: {
-                                  __typename: 'Mutation',
-                                  deleteGem: {
-                                    __typename: 'Gem',
-                                    id
-                                  }
-                                }
-                              })
-                            }
-                          />
-                        )
-
-                        return (
-                          <React.Fragment>
-                            {data.viewer.folders.map(f => (
-                              <Folder key={f.id} {...f}>
-                                {gems
-                                  .filter(g => g.folderId === f.id)
-                                  .map(renderGem)}
-                              </Folder>
-                            ))}
-                            {gems.filter(g => !g.folderId).map(renderGem)}
-                          </React.Fragment>
-                        )
-                      }}
-                    </Query>
-                  )}
-                </Mutation>
-              )}
-            </Mutation>
-          )}
-        </Mutation>
+        {loading ? (
+          <Title style={{ textAlign: 'center' }}>
+            <LoadingElipsis />
+          </Title>
+        ) : (
+          renderGems()
+        )}
       </GemsContainer>
       <Footer />
     </React.Fragment>

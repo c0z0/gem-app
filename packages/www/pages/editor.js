@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
-import { Query, Mutation } from 'react-apollo'
+import { useQuery, useMutation } from 'react-apollo-hooks'
+
 import gql from 'graphql-tag'
 import Router from 'next/router'
 import debounce from 'lodash.debounce'
@@ -44,6 +45,14 @@ const saveChangesDebounced = debounce(
 
 export default function EditorPage({ noteId }) {
   const [unsavedChangesState, setUnsavedChangesState] = useState(false)
+
+  const {
+    data: { note },
+    loading
+  } = useQuery(NOTE_QUERY, { variables: { id: noteId }, context: {} })
+
+  const saveNote = useMutation(SAVE_MUTATION)
+
   return (
     <React.Fragment>
       <Menu
@@ -53,44 +62,33 @@ export default function EditorPage({ noteId }) {
           Router.replace('/login')
         }}
       />
-      <Query query={NOTE_QUERY} variables={{ id: noteId }}>
-        {({ loading, data: { note } }) => {
-          if (loading || !note)
-            return (
-              <Title style={{ textAlign: 'center' }}>
-                <LoadingElipsis />
-              </Title>
-            )
-
-          return (
-            <Mutation mutation={SAVE_MUTATION}>
-              {(saveNote, { loading: saveNoteLoading }) => (
-                <RichEditor
-                  {...note}
-                  unsavedChanges={unsavedChangesState}
-                  onSave={changedNote => {
-                    saveChangesDebounced.cancel()
-                    saveChanges({
-                      changedNote,
-                      setUnsavedChangesState,
-                      saveNote
-                    })
-                  }}
-                  onChange={changedNote => {
-                    setUnsavedChangesState(true)
-                    saveChangesDebounced({
-                      changedNote,
-                      setUnsavedChangesState,
-                      saveNote
-                    })
-                  }}
-                  loading={saveNoteLoading}
-                />
-              )}
-            </Mutation>
-          )
-        }}
-      </Query>
+      {loading || !note ? (
+        <Title style={{ textAlign: 'center' }}>
+          <LoadingElipsis />
+        </Title>
+      ) : (
+        <RichEditor
+          {...note}
+          unsavedChanges={unsavedChangesState}
+          onSave={changedNote => {
+            saveChangesDebounced.cancel()
+            saveChanges({
+              changedNote,
+              setUnsavedChangesState,
+              saveNote
+            })
+          }}
+          onChange={changedNote => {
+            setUnsavedChangesState(true)
+            saveChangesDebounced({
+              changedNote,
+              setUnsavedChangesState,
+              saveNote
+            })
+          }}
+          loading={false}
+        />
+      )}
     </React.Fragment>
   )
 }

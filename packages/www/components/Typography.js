@@ -49,9 +49,9 @@ const Elipsis = styled.span`
 export function LoadingElipsis() {
   return (
     <React.Fragment>
-      <Elipsis>.</Elipsis>
-      <Elipsis>.</Elipsis>
-      <Elipsis>.</Elipsis>
+      <Elipsis key="a">.</Elipsis>
+      <Elipsis key="b">.</Elipsis>
+      <Elipsis key="c">.</Elipsis>
     </React.Fragment>
   )
 }

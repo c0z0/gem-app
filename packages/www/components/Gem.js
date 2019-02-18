@@ -97,9 +97,40 @@ const MenuEntry = keyframes`
   }
 `
 
+const MenuEntryBottom = keyframes`
+  0% {
+    transform: translateY(50%);
+    opacity: 0; 
+  }
+
+  100% {
+    transform: translateY(0);
+    opacity: 1; 
+  }
+`
+
+const MenuBackground = styled.div`
+  display: none;
+
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  opacity: ${({ visible }) => (visible ? '0.2' : '0')};
+  pointer-events: ${({ visible }) => (visible ? 'auto' : 'none')};
+  transition: all 0.2s;
+
+  background: black;
+  z-index: 50;
+
+  @media (${({ theme }) => theme.b.phoneOnly}) {
+    display: block;
+  }
+`
+
 const Menu = styled.ul`
   position: absolute;
-  top: calc(100% + 2px);
   z-index: 1;
   right: 0;
   animation: ${MenuEntry} 0.2s;
@@ -111,6 +142,21 @@ const Menu = styled.ul`
   box-shadow: 0 10px 20px 0 rgba(0, 0, 0, 0.12);
 
   display: ${({ visible }) => (visible ? 'block' : 'none')};
+
+  @media (${({ theme }) => theme.b.tabletUp}) {
+    top: calc(100% + 2px);
+  }
+
+  @media (${({ theme }) => theme.b.phoneOnly}) {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    box-shadow: none;
+    border-radius: 0;
+    animation: ${MenuEntryBottom} 0.2s;
+  }
 `
 
 const MenuItem = styled.li`
@@ -134,6 +180,10 @@ const MenuItem = styled.li`
   &:not(:last-child) {
     border-radius: 5px 5px 0 0;
     border-bottom: 1px #ddd solid;
+  }
+
+  @media (${({ theme }) => theme.b.phoneOnly}) {
+    padding: 8px 18px;
   }
 `
 
@@ -198,6 +248,11 @@ export default function Gem({
             <Dots />
           </OptionsButton>
 
+          <MenuBackground
+            visible={optionsState}
+            onClick={() => setOptions(false)}
+          />
+
           <Menu visible={optionsState}>
             {moveMenu ? (
               showNewFolder ? (
@@ -232,10 +287,20 @@ export default function Gem({
               )
             ) : (
               <React.Fragment>
-                <MenuItem onClick={() => copyToClipboard(href)}>
+                <MenuItem
+                  onClick={() => {
+                    setOptions(false)
+                    copyToClipboard(href)
+                  }}
+                >
                   Copy to clipboard
                 </MenuItem>
-                <MenuItem onClick={() => onToggleFavorite({ id, favorite })}>
+                <MenuItem
+                  onClick={() => {
+                    setOptions(false)
+                    onToggleFavorite({ id, favorite })
+                  }}
+                >
                   {favorite ? 'Remove from favorites' : 'Add to favorites'}
                 </MenuItem>
                 <MenuItem
@@ -246,7 +311,13 @@ export default function Gem({
                 >
                   Move to folder
                 </MenuItem>
-                <MenuItem red onClick={() => onDelete(id)}>
+                <MenuItem
+                  red
+                  onClick={() => {
+                    setOptions(false)
+                    onDelete(id)
+                  }}
+                >
                   Delete
                 </MenuItem>
               </React.Fragment>
