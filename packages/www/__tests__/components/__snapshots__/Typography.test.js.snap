@@ -74,7 +74,7 @@ exports[`P matches snapshot 1`] = `
 exports[`P matches snapshot 2`] = `
 <div>
   <p
-    class="sc-bwzfXH rGTGg"
+    class="sc-htpNat kDwRwl"
   >
     Test text
   </p>
@@ -83,9 +83,10 @@ exports[`P matches snapshot 2`] = `
 
 exports[`Title matches snapshot 1`] = `
 .c0 {
-  font-weight: normal;
+  font-weight: 400;
   color: #75489B;
-  font-size: 2rem;
+  font-size: 24px;
+  margin: 0;
 }
 
 <div>
@@ -100,7 +101,7 @@ exports[`Title matches snapshot 1`] = `
 exports[`Title matches snapshot 2`] = `
 <div>
   <h1
-    class="sc-bdVaJa gvGjOb"
+    class="sc-bdVaJa jvoJiL"
   >
     Test text
   </h1>

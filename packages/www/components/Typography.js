@@ -2,10 +2,20 @@ import React from 'react'
 import styled, { keyframes } from 'styled-components'
 
 export const Title = styled.h1`
-  font-weight: normal;
+  font-weight: 400;
   color: ${({ theme }) => theme.main};
-  font-size: 2rem;
+  font-size: 24px;
   ${({ light }) => light && `color: white;`}
+  margin: 0;
+`
+
+export const SubTitle = styled.h2`
+  font-weight: 400;
+  font-size: 24px;
+  color: #98a4a8;
+  ${({ light }) => light && `color: white;`}
+  margin: 0;
+  margin-bottom: 24px;
 `
 
 export const P = styled.p`

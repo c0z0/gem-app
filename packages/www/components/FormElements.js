@@ -1,14 +1,14 @@
 import styled from 'styled-components'
 
 export const Input = styled.input`
-  width: 275px;
+  width: 320px;
   max-width: 100%;
-  padding: 8px;
+  padding: 10px;
   font-size: 16px;
   outline: none;
   color: #484848;
   border: 1px solid #ddd;
-  border-radius: 6px;
+  border-radius: 7px;
   transition: all 0.2s;
   margin: 1rem 0;
 
@@ -20,7 +20,7 @@ export const Input = styled.input`
     border-color: #aaa;
   }
 
-  ${({disabled}) =>
+  ${({ disabled }) =>
     disabled &&
     `border-color: #ddd; color: #ddd; background: #fafafa; cursor: not-allowed;`}
 `
@@ -34,10 +34,10 @@ export const Button = styled.button`
   margin: 4px;
   color: white;
   cursor: pointer;
-  background: ${({theme}) => theme.main};
+  background: ${({ theme }) => theme.main};
   border: 1px solid transparent;
 
-  ${({disabled}) =>
+  ${({ disabled }) =>
     disabled &&
     `color: #ddd; border-color: #ddd; background: #fafafa; cursor: not-allowed;`}
 `
