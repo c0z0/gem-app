@@ -6,10 +6,11 @@ import { useQuery, useMutation } from 'react-apollo-hooks'
 import gql from 'graphql-tag'
 import cookie from 'cookie'
 
-import { Title, P, LoadingElipsis } from '../components/Typography'
+import { Title, P, SubTitle } from '../components/Typography'
 import redirectLogin from '../lib/redirect'
 import Container from '../components/Container'
-import { Input, Button } from '../components/FormElements'
+import { Input } from '../components/FormElements'
+import Button from '../components/Button'
 
 const LOGIN_MUTATION = gql`
   mutation Login($email: String!) {
@@ -32,6 +33,23 @@ const LOGIN_QUERY = gql`
   }
 `
 
+const Dots = styled.div`
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  z-index: -2;
+  left: 0;
+  right: 0;
+  background-image: radial-gradient(
+    circle,
+    #d7d7d7,
+    #d7d7d7 1px,
+    #fff 1px,
+    #fff
+  );
+  background-size: 28px 28px;
+`
+
 const Wrapper = styled.div`
   display: flex;
   height: 100vh;
@@ -42,20 +60,15 @@ const Wrapper = styled.div`
 `
 
 const Half = styled.div`
-  display: flex;
-  flex: 1;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-
-  &:nth-child(2) {
+  @media (${({ theme }) => theme.b.tabletUp}) {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    justify-content: center;
     align-items: flex-start;
-  }
 
-  @media (${({ theme }) => theme.b.phoneOnly}) {
     &:nth-child(2) {
-      justify-content: flex-start;
-      align-items: center;
+      align-items: flex-start;
     }
   }
 `
@@ -67,7 +80,7 @@ const Bg = styled.div`
   top: 0;
   left: 0;
   bottom: 0;
-  right: 50%;
+  right: 33%;
   z-index: -1;
   background-image: ${({ theme }) => theme.mainGradient};
 
@@ -81,14 +94,24 @@ const Diamond = styled.img.attrs({
   alt: 'logo'
 })`
   width: 200px;
+
+  @media (${({ theme }) => theme.b.phoneOnly}) {
+    width: 64px;
+    margin-left: 48px;
+    margin-top: 128px;
+  }
 `
 
 const TextWrapper = styled.div`
-  margin-left: 60px;
+  padding: 48px;
+  border-radius: 7px;
+  background: white;
+  box-shadow: 0px 4px 30px rgba(0, 0, 0, 0.15);
 
   @media (${({ theme }) => theme.b.phoneOnly}) {
-    text-align: center;
     margin: 0;
+    box-shadow: none;
+    padding-top: 32px;
   }
 `
 
@@ -114,10 +137,11 @@ export default function Login() {
             login({ variables: { email: emailState } })
           }}
         >
-          <Title>Welcome to Gem</Title>
-          <P>Enter your email address to get started</P>
+          <Title>Welcome,</Title>
+          <SubTitle>sign in to get started</SubTitle>
           <div>
             <Input
+              style={{ marginTop: 0 }}
               disabled={loadingState}
               placeholder="you@domain.com"
               value={emailState}
@@ -126,7 +150,7 @@ export default function Login() {
             />
           </div>
           <Button type="submit" disabled={loadingState || !emailState.length}>
-            {!loadingState ? 'Continue' : ['Loading', <LoadingElipsis />]}
+            {!loadingState ? 'Continue' : ['Loading', <Button.Elipsis />]}
           </Button>
         </form>
       </TextWrapper>
@@ -136,6 +160,7 @@ export default function Login() {
   return (
     <Container>
       <Bg />
+      <Dots />
       <Wrapper>
         <Half>
           <Diamond />
@@ -173,17 +198,13 @@ function Verification({ loginState }) {
 
   return (
     <TextWrapper>
-      <Title>Awaiting Verification</Title>
+      <Title>Awaiting Verification,</Title>
       <P>
         We sent an email to <b>{loginState.user.email}</b>.
       </P>
       <P>
         Please log in to your inbox, verify that the provided security code
-        matches the following text: <b>{loginState.verificationCode}</b>
-      </P>
-      <P>
-        Waiting for your confirmation
-        <LoadingElipsis />
+        matches the following text: <b>{loginState.verificationCode}</b>.
       </P>
     </TextWrapper>
   )

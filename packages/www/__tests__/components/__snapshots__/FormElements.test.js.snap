@@ -32,14 +32,14 @@ exports[`Button matches snapshot 2`] = `
 
 exports[`Input matches snapshot 1`] = `
 .c0 {
-  width: 275px;
+  width: 320px;
   max-width: 100%;
-  padding: 8px;
+  padding: 10px;
   font-size: 16px;
   outline: none;
   color: #484848;
   border: 1px solid #ddd;
-  border-radius: 6px;
+  border-radius: 7px;
   -webkit-transition: all 0.2s;
   transition: all 0.2s;
   margin: 1rem 0;
@@ -75,7 +75,7 @@ exports[`Input matches snapshot 1`] = `
 exports[`Input matches snapshot 2`] = `
 <div>
   <input
-    class="sc-bdVaJa fZpnqE"
+    class="sc-bdVaJa jPmviR"
     disabled=""
   />
 </div>
