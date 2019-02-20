@@ -12,7 +12,9 @@ const Action = styled.button`
   background: white;
   z-index: 2;
   cursor: pointer;
-  padding: 8px 20px;
+  padding: 0 20px;
+  line-height: 2.5rem;
+  height: 2.5rem;
   padding-left: 10px;
   font-size: 16px;
   transition: all 0.2s;
@@ -28,20 +30,20 @@ const Action = styled.button`
 
   color: ${({ theme }) => theme.main};
   font-weight: 500;
-  border-radius: 4px 0 0 4px;
+  border-radius: 7px 0 0 7px;
 
   ${({ active }) => active && `background: #fafafa; color: #484848;`}
 `
 const Input = styled.input`
   flex: 1;
-  padding: 8px;
+  padding: 10px;
   font-size: 16px;
   outline: none;
   color: #484848;
   border: 1px solid #eaeaea;
   transition: all 0.2s;
   border-left: none;
-  border-radius: 0 4px 4px 0;
+  border-radius: 0 7px 7px 0;
 
   &::placeholder {
     color: #ccc;

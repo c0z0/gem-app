@@ -1,9 +1,11 @@
-import React, { useRef, useState, useEffect } from 'react'
+import React, { useRef, useEffect } from 'react'
 import styled from 'styled-components'
 import PropTypes from 'prop-types'
 
 import { LoadingElipsis } from './Typography'
 import Button from './Button'
+import Input from './Input'
+import Expando from './Expando'
 
 export function isValidUrl(string) {
   let url
@@ -19,40 +21,6 @@ export function isValidUrl(string) {
   return url
 }
 
-const Wrapper = styled.div`
-  height: ${({ open, openHeight }) => (open ? openHeight : '0px')};
-  opacity: ${({ open }) => (open ? '1' : '0')};
-  transition: all 0.2s;
-  overflow: hidden;
-  @media (${({ theme }) => theme.b.tabletUp}) {
-    padding-top: ${({ open }) => (open ? '12px' : '0')};
-  }
-`
-const Input = styled.input`
-  flex: 1;
-  padding: 8px;
-  font-size: 16px;
-  outline: none;
-  color: #484848;
-  border: 1px solid #eaeaea;
-  transition: all 0.2s;
-  border-radius: 4px;
-
-  &::placeholder {
-    color: #ccc;
-  }
-
-  &:focus {
-    background: #fafafa;
-  }
-
-  ${({ disabled }) =>
-    disabled &&
-    `border-color: #ddd; color: #ddd; background: #fafafa; cursor: not-allowed;`}
-`
-
-const Content = styled.form``
-
 const SubmitButton = styled(Button).attrs({ type: 'sumbit' })`
   min-width: 80px;
   margin: 0;
@@ -64,8 +32,15 @@ const SubmitButton = styled(Button).attrs({ type: 'sumbit' })`
 
 const InputWrapper = styled.div`
   display: flex;
-  align-items: center;
-  padding-bottom: 8px;
+  padding: 4px 0;
+
+  &:last-child {
+    padding: 8px 0;
+  }
+
+  &:first-child {
+    padding-top: 8px;
+  }
 `
 
 const SubmitWrapper = styled(InputWrapper)`
@@ -77,11 +52,6 @@ const SubmitWrapper = styled(InputWrapper)`
   }
 `
 
-const Label = styled.label`
-  margin-right: 8px;
-  width: 40px;
-`
-
 export default function NewGem({
   visible,
   onNewGemChange,
@@ -89,27 +59,29 @@ export default function NewGem({
   loading,
   onSubmit
 }) {
-  const contentRef = useRef(null)
-  const [heightState, setHeight] = useState('0px')
+  const linkInputRef = useRef(null)
 
   useEffect(() => {
-    const height = contentRef.current.offsetHeight
-
-    setHeight(`${height}px`)
-  }, [])
+    if (visible) {
+      linkInputRef.current.focus()
+    } else {
+      linkInputRef.current.blur()
+    }
+  }, [visible])
 
   return (
-    <Wrapper open={visible} openHeight={heightState}>
-      <Content
-        ref={contentRef}
+    <Expando open={visible}>
+      <form
         onSubmit={e => {
           e.preventDefault()
           onSubmit(newGem)
         }}
       >
         <InputWrapper>
-          <Label>Link: </Label>
-          <Input
+          <Input.WithLabel
+            inputRef={linkInputRef}
+            label="Link: "
+            flex
             disabled={loading || !visible}
             placeholder="example.com"
             value={newGem.url}
@@ -119,8 +91,9 @@ export default function NewGem({
           />
         </InputWrapper>
         <InputWrapper>
-          <Label>Tags: </Label>
-          <Input
+          <Input.WithLabel
+            label="Tags: "
+            flex
             disabled={loading || !visible}
             placeholder="diy, development, gym"
             value={newGem.tags.join(',')}
@@ -133,7 +106,10 @@ export default function NewGem({
           />
         </InputWrapper>
         <SubmitWrapper>
-          <SubmitButton disabled={loading || (!isValidUrl(newGem.url) && true)}>
+          <SubmitButton
+            disabled={loading || (!isValidUrl(newGem.url) && true)}
+            flat
+          >
             {loading ? (
               <React.Fragment>
                 Loading
@@ -144,8 +120,8 @@ export default function NewGem({
             )}
           </SubmitButton>
         </SubmitWrapper>
-      </Content>
-    </Wrapper>
+      </form>
+    </Expando>
   )
 }
 

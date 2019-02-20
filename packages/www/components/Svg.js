@@ -62,14 +62,39 @@ export const HeaderSmallIcon = props => (
 
 export const Diamond = props => (
   <svg viewBox="0 0 512 512" {...props}>
-    <path fill="#ffe182" d="M360.129 172.138L256 472.276l256-300.138z" />
-    <g fill="#ffcd73">
+    <path
+      fill="#ffe182"
+      d="M360.129 172.138L256 472.276l256-300.138z"
+      stroke="#ffe182"
+      strokeWidth="1"
+    />
+    <g fill="#ffcd73" stroke="#ffe182" strokeWidth="1">
       <path d="M105.931 39.724L0 172.138h151.871zM360.129 172.138H512L406.069 39.724zM360.129 172.138L256 39.724 151.871 172.138z" />
     </g>
-    <path fill="#ffaa64" d="M256 39.724H105.931l45.94 132.414z" />
-    <path fill="#ffe182" d="M406.069 39.724H256l104.129 132.414z" />
-    <path fill="#ffaa64" d="M151.871 172.138L256 472.276l104.129-300.138z" />
-    <path fill="#ff8c5a" d="M0 172.138l256 300.138-104.129-300.138z" />
+    <path
+      fill="#ffaa64"
+      d="M256 39.724H105.931l45.94 132.414z"
+      stroke="#ffaa64"
+      strokeWidth="1"
+    />
+    <path
+      fill="#ffe182"
+      d="M406.069 39.724H256l104.129 132.414z"
+      stroke="#ffe182"
+      strokeWidth="1"
+    />
+    <path
+      fill="#ffaa64"
+      d="M151.871 172.138L256 472.276l104.129-300.138z"
+      stroke="#ffaa64"
+      strokeWidth="1"
+    />
+    <path
+      fill="#ff8c5a"
+      d="M0 172.138l256 300.138-104.129-300.138z"
+      stroke="#ff8c5a"
+      strokeWidth="1"
+    />
   </svg>
 )
 

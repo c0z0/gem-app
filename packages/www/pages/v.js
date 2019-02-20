@@ -88,7 +88,7 @@ export default function Verify({ error }) {
       <Half>
         <Card>
           <Title>Login verified,</Title>
-          <SubTitle style={{ margin: 0 }}>You may close this tab.</SubTitle>
+          <SubTitle style={{ margin: 0 }}>You may close this tab</SubTitle>
         </Card>
       </Half>
     </StyledContainer>
