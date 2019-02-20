@@ -2,6 +2,8 @@ import React, { useEffect, useState, useRef } from 'react'
 import styled from 'styled-components'
 import PropTypes from 'prop-types'
 
+import { Caret } from './Svg'
+
 function outerHeight(el) {
   let height = el.offsetHeight
   const style = getComputedStyle(el)
@@ -20,7 +22,7 @@ const Wrapper = styled.div`
   }
 `
 
-const Carret = styled.img.attrs({ src: '/static/carret.svg' })`
+const StyledCaret = styled(Caret)`
   transform: rotate(${({ flipped }) => (flipped ? '180deg' : '0deg')});
 
   transition: transform 0.2s;
@@ -72,7 +74,7 @@ export default function Folder({
       onDragLeave={onDragLeave}
     >
       <Title onClick={() => setVisibleState(!visibleState)}>
-        <Carret flipped={visibleState} />
+        <StyledCaret flipped={visibleState} />
         <span>{title}</span>
       </Title>
       <Wrapper open={visibleState} openHeight={heightState}>

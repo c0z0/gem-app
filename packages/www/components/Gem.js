@@ -3,6 +3,7 @@ import styled, { keyframes } from 'styled-components'
 import PropTypes from 'prop-types'
 
 import { LoadingElipsis } from './Typography'
+import { Dots } from './Svg'
 
 const copyToClipboard = str => {
   const el = document.createElement('textarea')
@@ -82,8 +83,6 @@ export const Tag = styled.span`
     background: ${({ theme }) => theme.secondary};
   }
 `
-
-const Dots = styled.img.attrs({ src: '/static/dots.svg' })``
 
 const MenuEntry = keyframes`
   0% {

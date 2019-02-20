@@ -3,6 +3,7 @@ import styled from 'styled-components'
 import PropTypes from 'prop-types'
 
 import SubMenu from './SubMenu'
+import { Plus } from './Svg'
 
 const Action = styled.button`
   border: 1px solid #eaeaea;
@@ -60,7 +61,7 @@ const HideMobile = styled.span`
   }
 `
 
-const Plus = styled.img.attrs({ src: '/static/plus.svg' })`
+const StyledPlus = styled(Plus)`
   transform: rotate(${({ flipped }) => (flipped ? '180deg' : '0deg')});
 
   transition: transform 0.2s;
@@ -78,7 +79,7 @@ export default function NotesToolbar({
       controls={
         <React.Fragment>
           <Action onClick={onNewNote}>
-            <Plus />{' '}
+            <StyledPlus />{' '}
             <span>
               Create <HideMobile>note</HideMobile>
             </span>

@@ -2,6 +2,7 @@ import React from 'react'
 import styled from 'styled-components'
 
 import Container from './Container'
+import { Diamond } from './Svg'
 
 const FooterContainer = styled(Container)`
   display: flex;
@@ -37,8 +38,8 @@ const Title = styled.span`
   font-size: 20px;
 `
 
-const Diamond = styled.img.attrs({
-  src: '/static/diamond.svg'
+const StyledDiamond = styled(Diamond).attrs({
+  alt: 'gem logo'
 })`
   width: 40px;
   filter: grayscale(100%);
@@ -60,7 +61,7 @@ export default function Footer() {
     <Border>
       <FooterContainer>
         <Logo>
-          <Diamond />
+          <StyledDiamond />
           <Title>Gem</Title>
         </Logo>
         <p>

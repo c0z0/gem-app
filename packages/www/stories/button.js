@@ -13,3 +13,15 @@ storiesOf('Button', module)
     </Button>
   ))
   .add('Disabled', () => <Button disabled>Disabled</Button>)
+  .add('Small', () => <Button small>Small</Button>)
+  .add('Small secondary', () => (
+    <Button small secondary>
+      Small Secondary
+    </Button>
+  ))
+  .add('Flat', () => <Button flat>Flat</Button>)
+  .add('Flat secondary', () => (
+    <Button flat secondary>
+      Flat secondary
+    </Button>
+  ))

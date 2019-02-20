@@ -6,11 +6,12 @@ import { useQuery, useMutation } from 'react-apollo-hooks'
 import gql from 'graphql-tag'
 import cookie from 'cookie'
 
-import { Title, P, SubTitle } from '../components/Typography'
+import { Title, P, SubTitle, Card } from '../components/Typography'
 import redirectLogin from '../lib/redirect'
 import Container from '../components/Container'
-import { Input } from '../components/FormElements'
+import Input from '../components/Input'
 import Button from '../components/Button'
+import { Diamond } from '../components/Svg'
 
 const LOGIN_MUTATION = gql`
   mutation Login($email: String!) {
@@ -33,23 +34,6 @@ const LOGIN_QUERY = gql`
   }
 `
 
-const Dots = styled.div`
-  position: fixed;
-  top: 0;
-  bottom: 0;
-  z-index: -2;
-  left: 0;
-  right: 0;
-  background-image: radial-gradient(
-    circle,
-    #d7d7d7,
-    #d7d7d7 1px,
-    #fff 1px,
-    #fff
-  );
-  background-size: 28px 28px;
-`
-
 const Wrapper = styled.div`
   display: flex;
   height: 100vh;
@@ -66,10 +50,6 @@ const Half = styled.div`
     flex-direction: column;
     justify-content: center;
     align-items: flex-start;
-
-    &:nth-child(2) {
-      align-items: flex-start;
-    }
   }
 `
 
@@ -89,7 +69,7 @@ const Bg = styled.div`
   }
 `
 
-const Diamond = styled.img.attrs({
+const StyledDiamond = styled(Diamond).attrs({
   src: '/static/diamond.svg',
   alt: 'logo'
 })`
@@ -99,19 +79,6 @@ const Diamond = styled.img.attrs({
     width: 64px;
     margin-left: 48px;
     margin-top: 128px;
-  }
-`
-
-const TextWrapper = styled.div`
-  padding: 48px;
-  border-radius: 7px;
-  background: white;
-  box-shadow: 0px 4px 30px rgba(0, 0, 0, 0.15);
-
-  @media (${({ theme }) => theme.b.phoneOnly}) {
-    margin: 0;
-    box-shadow: none;
-    padding-top: 32px;
   }
 `
 
@@ -129,7 +96,7 @@ export default function Login() {
 
   function renderForm() {
     return (
-      <TextWrapper>
+      <Card>
         <form
           onSubmit={e => {
             e.preventDefault()
@@ -153,17 +120,16 @@ export default function Login() {
             {!loadingState ? 'Continue' : ['Loading', <Button.Elipsis />]}
           </Button>
         </form>
-      </TextWrapper>
+      </Card>
     )
   }
 
   return (
     <Container>
       <Bg />
-      <Dots />
       <Wrapper>
         <Half>
-          <Diamond />
+          <StyledDiamond />
         </Half>
         <Half>
           {!loginState ? (
@@ -197,7 +163,7 @@ function Verification({ loginState }) {
   }
 
   return (
-    <TextWrapper>
+    <Card>
       <Title>Awaiting Verification,</Title>
       <P>
         We sent an email to <b>{loginState.user.email}</b>.
@@ -206,7 +172,7 @@ function Verification({ loginState }) {
         Please log in to your inbox, verify that the provided security code
         matches the following text: <b>{loginState.verificationCode}</b>.
       </P>
-    </TextWrapper>
+    </Card>
   )
 }
 

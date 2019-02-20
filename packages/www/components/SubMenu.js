@@ -4,6 +4,7 @@ import Link from 'next/link'
 import PropTypes from 'prop-types'
 
 import Container from './Container'
+import { Diamond } from './Svg'
 
 const Badge = styled.span`
   background: ${({ theme }) => theme.main};
@@ -62,9 +63,7 @@ const MenuItem = styled.a`
     margin-left: 0;
   }
 `
-const Diamond = styled.img.attrs({
-  src: '/static/diamond.svg'
-})`
+const StyledDiamond = styled(Diamond)`
   width: 24px;
   height: 24px;
   margin-right: 12px;
@@ -128,7 +127,7 @@ export default function SubMenu({ controls, children, active }) {
     <Border ref={toolbarRef} floating={diamondVisible}>
       <ToolbarContainer>
         <SearchContainer>
-          <Diamond visible={diamondVisible} />
+          <StyledDiamond visible={diamondVisible} />
           <ControlsContainer diamondVisible={diamondVisible}>
             {controls}
           </ControlsContainer>

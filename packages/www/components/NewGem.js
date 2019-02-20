@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import PropTypes from 'prop-types'
 
 import { LoadingElipsis } from './Typography'
-import { Button } from './FormElements'
+import Button from './Button'
 
 export function isValidUrl(string) {
   let url

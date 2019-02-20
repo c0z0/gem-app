@@ -1,0 +1,8 @@
+packages/desktop
+packages/*/node_modules
+**/**/**/**/.DS_Store
+**/node_modules
+**/**/.env
+packages/*/.env
+packages/*/.next
+packages/*/coverage

@@ -67,7 +67,7 @@ const Controls = styled.div`
   display: flex;
 `
 
-const Carret = styled.img.attrs({ src: '/static/carret.svg' })`
+const StyledCaret = styled(Icons.Caret)`
   transform: rotate(90deg);
   margin-right: 8px;
   color: #484848;
@@ -106,7 +106,7 @@ export default function EditorToolbar({
         <React.Fragment>
           <Link href="/notes" passHref>
             <BackButton>
-              <Carret />
+              <StyledCaret />
               <span>Back</span>
             </BackButton>
           </Link>

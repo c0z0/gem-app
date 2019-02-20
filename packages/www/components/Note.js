@@ -4,6 +4,7 @@ import styled, { keyframes } from 'styled-components'
 import PropTypes from 'prop-types'
 
 import { LoadingElipsis } from './Typography'
+import { Dots } from './Svg'
 
 const Container = styled.div`
   margin: 28px 0;
@@ -61,8 +62,6 @@ export const Tag = styled.span`
     background: ${({ theme }) => theme.secondary};
   }
 `
-
-const Dots = styled.img.attrs({ src: '/static/dots.svg' })``
 
 const MenuEntry = keyframes`
   0% {

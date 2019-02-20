@@ -59,3 +59,42 @@ export const HeaderSmallIcon = props => (
     />
   </svg>
 )
+
+export const Diamond = props => (
+  <svg viewBox="0 0 512 512" {...props}>
+    <path fill="#ffe182" d="M360.129 172.138L256 472.276l256-300.138z" />
+    <g fill="#ffcd73">
+      <path d="M105.931 39.724L0 172.138h151.871zM360.129 172.138H512L406.069 39.724zM360.129 172.138L256 39.724 151.871 172.138z" />
+    </g>
+    <path fill="#ffaa64" d="M256 39.724H105.931l45.94 132.414z" />
+    <path fill="#ffe182" d="M406.069 39.724H256l104.129 132.414z" />
+    <path fill="#ffaa64" d="M151.871 172.138L256 472.276l104.129-300.138z" />
+    <path fill="#ff8c5a" d="M0 172.138l256 300.138-104.129-300.138z" />
+  </svg>
+)
+
+export const Caret = props => (
+  <svg width={14} height={8} viewBox="0 0 11 7" {...props}>
+    <path
+      d="M1.5 1.5l4 4.091M9.743 1.5L5.822 5.58"
+      fill="none"
+      fillRule="evenodd"
+      strokeLinecap="square"
+      stroke="#979797"
+    />
+  </svg>
+)
+
+export const Dots = props => (
+  <svg width={2} height={12} {...props}>
+    <g fill="currentColor" fillRule="evenodd">
+      <path d="M2 0v1.846H0V0zM2 5.077v1.846H0V5.077zM2 10.154V12H0v-1.846z" />
+    </g>
+  </svg>
+)
+
+export const Plus = props => (
+  <svg width={14} height={14} viewBox="174 112 11 12" {...props}>
+    <path d="M179.5 113v10m-5-5h10" stroke="#979797" />
+  </svg>
+)
