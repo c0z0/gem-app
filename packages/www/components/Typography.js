@@ -9,8 +9,22 @@ export const Title = styled.h1`
   margin: 0;
 `
 
+export const Card = styled.div`
+  padding: 48px;
+  border-radius: 7px;
+  background: white;
+  box-shadow: 0px 4px 30px rgba(0, 0, 0, 0.15);
+
+  @media (${({ theme }) => theme.b.phoneOnly}) {
+    margin: 0;
+    box-shadow: none;
+    padding-top: 32px;
+  }
+`
+
 export const SubTitle = styled.h2`
   font-weight: 400;
+  text-transform: lowercase;
   font-size: 24px;
   color: #98a4a8;
   ${({ light }) => light && `color: white;`}

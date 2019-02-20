@@ -86,10 +86,39 @@ exports[`Footer matches snapshot 1`] = `
       <div
         class="c2"
       >
-        <img
+        <svg
+          alt="gem logo"
           class="c3"
-          src="/static/diamond.svg"
-        />
+          viewBox="0 0 512 512"
+        >
+          <path
+            d="M360.129 172.138L256 472.276l256-300.138z"
+            fill="#ffe182"
+          />
+          <g
+            fill="#ffcd73"
+          >
+            <path
+              d="M105.931 39.724L0 172.138h151.871zM360.129 172.138H512L406.069 39.724zM360.129 172.138L256 39.724 151.871 172.138z"
+            />
+          </g>
+          <path
+            d="M256 39.724H105.931l45.94 132.414z"
+            fill="#ffaa64"
+          />
+          <path
+            d="M406.069 39.724H256l104.129 132.414z"
+            fill="#ffe182"
+          />
+          <path
+            d="M151.871 172.138L256 472.276l104.129-300.138z"
+            fill="#ffaa64"
+          />
+          <path
+            d="M0 172.138l256 300.138-104.129-300.138z"
+            fill="#ff8c5a"
+          />
+        </svg>
         <span
           class="c4"
         >

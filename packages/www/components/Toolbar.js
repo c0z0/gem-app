@@ -4,6 +4,7 @@ import PropTypes from 'prop-types'
 
 import SubMenu from './SubMenu'
 import NewGem from './NewGem'
+import { Caret } from './Svg'
 
 const Action = styled.button`
   border: 1px solid #eaeaea;
@@ -61,7 +62,7 @@ const HideMobile = styled.span`
   }
 `
 
-const Carret = styled.img.attrs({ src: '/static/carret.svg' })`
+const StyledCaret = styled(Caret)`
   transform: rotate(${({ flipped }) => (flipped ? '180deg' : '0deg')});
 
   transition: transform 0.2s;
@@ -88,7 +89,7 @@ export default function Toolbar({
             active={newGemVisible}
             onClick={() => setNewGemVisible(!newGemVisible)}
           >
-            <Carret flipped={newGemVisible} />{' '}
+            <StyledCaret flipped={newGemVisible} />{' '}
             <span>
               Add <HideMobile>gem</HideMobile>
             </span>

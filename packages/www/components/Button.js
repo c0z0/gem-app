@@ -18,6 +18,8 @@ const Button = styled.button.attrs({ role: 'button' })`
   border: none;
   cursor: pointer;
 
+  text-transform: capitalize;
+
   &:hover {
     opacity: 0.9;
     box-shadow: 0px 6px 20px rgba(117, 72, 155, 0.39);
@@ -36,6 +38,23 @@ const Button = styled.button.attrs({ role: 'button' })`
 
   `}
 
+${({ small }) =>
+  small &&
+  `
+    height: 2rem;
+    line-height: 2rem;
+
+  `}
+
+${({ flat }) =>
+  flat &&
+  `
+    box-shadow: none;
+    &:hover {
+      box-shadow: none;
+    }
+  `}
+
   ${({ loading, disabled }) =>
     (loading || disabled) &&
     `
@@ -45,6 +64,7 @@ const Button = styled.button.attrs({ role: 'button' })`
     opacity: 1 !important;
     background: #EFEFEF;
   `}
+
 `
 
 Button.Elipsis = LoadingElipsis

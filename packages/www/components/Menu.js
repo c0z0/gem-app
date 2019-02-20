@@ -3,6 +3,7 @@ import styled from 'styled-components'
 import PropTypes from 'prop-types'
 
 import Container from './Container'
+import { Diamond } from './Svg'
 
 const MenuContainer = styled(Container)`
   padding-top: 20px;
@@ -25,8 +26,8 @@ const Title = styled.span`
   font-size: 20px;
 `
 
-const Diamond = styled.img.attrs({
-  src: '/static/diamond.svg'
+const StyledDiamond = styled(Diamond).attrs({
+  alt: 'gem logo'
 })`
   width: 40px;
 `
@@ -47,7 +48,7 @@ export default function Menu({ onLogout }) {
   return (
     <MenuContainer>
       <Logo>
-        <Diamond />
+        <StyledDiamond />
         <Title>Gem</Title>
       </Logo>
       <div>

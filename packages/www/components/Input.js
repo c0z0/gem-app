@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 
-export const Input = styled.input`
+const Input = styled.input`
   width: 320px;
   max-width: 100%;
   padding: 10px;
@@ -11,6 +11,17 @@ export const Input = styled.input`
   border-radius: 7px;
   transition: all 0.2s;
   margin: 1rem 0;
+
+  &:not(:first-child) {
+    border-left: none;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+  }
+
+  &:not(:last-child) {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+  }
 
   &::placeholder {
     color: #ddd;
@@ -23,21 +34,8 @@ export const Input = styled.input`
   ${({ disabled }) =>
     disabled &&
     `border-color: #ddd; color: #ddd; background: #fafafa; cursor: not-allowed;`}
+
+  ${({ flex }) => flex && `flex: 1;`}
 `
 
-export const Button = styled.button`
-  outline: none;
-  border: none;
-  border-radius: 6px;
-  padding: 8px 12px;
-  font-size: 16px;
-  margin: 4px;
-  color: white;
-  cursor: pointer;
-  background: ${({ theme }) => theme.main};
-  border: 1px solid transparent;
-
-  ${({ disabled }) =>
-    disabled &&
-    `color: #ddd; border-color: #ddd; background: #fafafa; cursor: not-allowed;`}
-`
+export default Input
