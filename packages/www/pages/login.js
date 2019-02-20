@@ -33,23 +33,6 @@ const LOGIN_QUERY = gql`
   }
 `
 
-const Dots = styled.div`
-  position: fixed;
-  top: 0;
-  bottom: 0;
-  z-index: -2;
-  left: 0;
-  right: 0;
-  background-image: radial-gradient(
-    circle,
-    #d7d7d7,
-    #d7d7d7 1px,
-    #fff 1px,
-    #fff
-  );
-  background-size: 28px 28px;
-`
-
 const Wrapper = styled.div`
   display: flex;
   height: 100vh;
@@ -160,7 +143,6 @@ export default function Login() {
   return (
     <Container>
       <Bg />
-      <Dots />
       <Wrapper>
         <Half>
           <Diamond />
