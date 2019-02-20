@@ -1,26 +1,9 @@
-import React, { useEffect, useState, useRef } from 'react'
+import React, { useState } from 'react'
 import styled from 'styled-components'
 import PropTypes from 'prop-types'
 
+import Expando from './Expando'
 import { Caret } from './Svg'
-
-function outerHeight(el) {
-  let height = el.offsetHeight
-  const style = getComputedStyle(el)
-
-  height += parseInt(style.marginTop, 10) + parseInt(style.marginBottom, 10)
-  return height
-}
-
-const Wrapper = styled.div`
-  height: ${({ open, openHeight }) => (open ? openHeight : '0px')};
-  opacity: ${({ open }) => (open ? '1' : '0')};
-  transition: all 0.2s;
-  overflow: ${({ open }) => (open ? 'inherit' : 'hidden')};
-  @media (${({ theme }) => theme.b.tabletUp}) {
-    padding-top: ${({ open }) => (open ? '12px' : '0')};
-  }
-`
 
 const StyledCaret = styled(Caret)`
   transform: rotate(${({ flipped }) => (flipped ? '180deg' : '0deg')});
@@ -31,6 +14,9 @@ const StyledCaret = styled(Caret)`
 
 const Content = styled.div`
   padding-left: 32px;
+  @media (${({ theme }) => theme.b.tabletUp}) {
+    padding-top: ${({ open }) => (open ? '12px' : '0')};
+  }
 `
 
 const FolderWrapper = styled.div`
@@ -57,15 +43,7 @@ export default function Folder({
   onDragOver,
   onDragLeave
 }) {
-  const contentRef = useRef(null)
-  const [heightState, setHeight] = useState('0px')
   const [visibleState, setVisibleState] = useState(false)
-
-  useEffect(() => {
-    const height = outerHeight(contentRef.current)
-
-    setHeight(`${height}px`)
-  }, [children])
 
   return (
     <FolderWrapper
@@ -77,9 +55,9 @@ export default function Folder({
         <StyledCaret flipped={visibleState} />
         <span>{title}</span>
       </Title>
-      <Wrapper open={visibleState} openHeight={heightState}>
-        <Content ref={contentRef}>{children}</Content>
-      </Wrapper>
+      <Expando open={visibleState}>
+        <Content open={visibleState}>{children}</Content>
+      </Expando>
     </FolderWrapper>
   )
 }

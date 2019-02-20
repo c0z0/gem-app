@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import Router from 'next/router'
 import styled from 'styled-components'
@@ -32,6 +32,12 @@ const LOGIN_QUERY = gql`
       pending
     }
   }
+`
+
+const A = styled.a`
+  color: ${({ theme }) => theme.main};
+  text-decoration: none;
+  transition: all 0.2s;
 `
 
 const Wrapper = styled.div`
@@ -86,6 +92,14 @@ export default function Login() {
   const [emailState, setEmail] = useState('')
   const [loadingState, setLoadingState] = useState(false)
   const [loginState, setLogin] = useState(null)
+  const inputRef = useRef(null)
+
+  useEffect(() => {
+    if (!loginState) {
+      inputRef.current.focus()
+      inputRef.current.select()
+    }
+  }, [loginState])
 
   const login = useMutation(LOGIN_MUTATION, {
     update: (_, { data }) => {
@@ -108,6 +122,7 @@ export default function Login() {
           <SubTitle>sign in to get started</SubTitle>
           <div>
             <Input
+              ref={inputRef}
               style={{ marginTop: 0 }}
               disabled={loadingState}
               placeholder="you@domain.com"
@@ -135,7 +150,13 @@ export default function Login() {
           {!loginState ? (
             renderForm()
           ) : (
-            <Verification loginState={loginState} />
+            <Verification
+              loginState={loginState}
+              undo={e => {
+                e.preventDefault()
+                setLogin(null)
+              }}
+            />
           )}
         </Half>
       </Wrapper>
@@ -149,7 +170,7 @@ Login.getInitialProps = async ctx => {
   return {}
 }
 
-function Verification({ loginState }) {
+function Verification({ loginState, undo }) {
   const { data, loading } = useQuery(LOGIN_QUERY, {
     variables: { id: loginState.id },
     pollInterval: 1000
@@ -164,9 +185,13 @@ function Verification({ loginState }) {
 
   return (
     <Card>
-      <Title>Awaiting Verification,</Title>
+      <Title>Awaiting Verification</Title>
       <P>
-        We sent an email to <b>{loginState.user.email}</b>.
+        We sent an email to <b>{loginState.user.email}</b> (
+        <A href="" onClick={undo} role="button">
+          undo
+        </A>
+        ).
       </P>
       <P>
         Please log in to your inbox, verify that the provided security code
@@ -187,5 +212,6 @@ Verification.propTypes = {
     user: PropTypes.shape({
       email: PropTypes.string
     })
-  })
+  }),
+  undo: PropTypes.func.isRequired
 }
