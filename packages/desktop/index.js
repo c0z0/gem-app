@@ -21,12 +21,12 @@ autoLauncher.isEnabled().then(function(isEnabled) {
   autoLaunchEnabled = isEnabled
 })
 
+const appUrl = 'http://gem.cserdean.me'
+
 // This method is called once Electron is ready to run our code
 // It is effectively the main method of our Electron app
 
 app.setName('Gem')
-
-// app.dock.hide()
 
 app.on('ready', () => {
   Menu.setApplicationMenu(
@@ -144,7 +144,7 @@ app.on('ready', () => {
   window.setVisibleOnAllWorkspaces(true, { visibleOnFullScreen: true })
 
   // Tell the popup window to load our index.html file
-  window.loadURL(`https://gem.cserdean.me`)
+  window.loadURL(appUrl)
 
   // Only close the window on blur if dev tools isn't opened
   window.on('blur', () => {
@@ -154,7 +154,10 @@ app.on('ready', () => {
   })
 
   const handleRedirect = (e, url) => {
-    if (url != window.webContents.getURL()) {
+    const appHost = new URL(appUrl).href
+    const urlHost = new URL(url).href
+
+    if (appHost !== urlHost) {
       e.preventDefault()
       require('electron').shell.openExternal(url)
     }
