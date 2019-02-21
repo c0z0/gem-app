@@ -8,6 +8,8 @@ const {
 } = require('electron')
 const AutoLaunch = require('auto-launch')
 
+const { onOnlineStatusChange } = require('./lib/online-status')
+
 let tray = undefined
 let window = undefined
 
@@ -27,6 +29,12 @@ const appUrl = 'http://gem.cserdean.me'
 // It is effectively the main method of our Electron app
 
 app.setName('Gem')
+
+onOnlineStatusChange(app, (_, status) => {
+  if (status === 'offline')
+    window.loadURL(`file://${__dirname}/views/offline.html`)
+  if (status === 'online') window.loadURL(appUrl)
+})
 
 app.on('ready', () => {
   Menu.setApplicationMenu(
@@ -68,7 +76,7 @@ app.on('ready', () => {
   )
 
   // Setup the menubar with an icon
-  tray = new Tray(nativeImage.createFromDataURL(base64Icon))
+  tray = new Tray(`${__dirname}/icons/trayTemplate.png`)
 
   // Add a click handler so that when the user clicks on the menubar icon, it shows
   // our popup window
