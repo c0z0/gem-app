@@ -9,7 +9,7 @@ import cookie from 'cookie'
 import { Title, P, SubTitle, Card } from '../components/Typography'
 import redirectLogin from '../lib/redirect'
 import Container from '../components/Container'
-import Input from '../components/Input'
+import { EmailInput as Input } from '../components/Input'
 import Button from '../components/Button'
 import { Diamond } from '../components/Svg'
 
@@ -122,7 +122,7 @@ export default function Login() {
           <SubTitle>sign in to get started</SubTitle>
           <div>
             <Input
-              ref={inputRef}
+              innerRef={inputRef}
               style={{ marginTop: 0 }}
               disabled={loadingState}
               placeholder="you@domain.com"
