@@ -8,6 +8,8 @@ const {
 } = require('electron')
 const AutoLaunch = require('auto-launch')
 
+const { onOnlineStatusChange } = require('./lib/online-status')
+
 let tray = undefined
 let window = undefined
 
@@ -21,12 +23,18 @@ autoLauncher.isEnabled().then(function(isEnabled) {
   autoLaunchEnabled = isEnabled
 })
 
+const appUrl = 'http://gem.cserdean.me'
+
 // This method is called once Electron is ready to run our code
 // It is effectively the main method of our Electron app
 
 app.setName('Gem')
 
-// app.dock.hide()
+onOnlineStatusChange(app, (_, status) => {
+  if (status === 'offline')
+    window.loadURL(`file://${__dirname}/views/offline.html`)
+  if (status === 'online') window.loadURL(appUrl)
+})
 
 app.on('ready', () => {
   Menu.setApplicationMenu(
@@ -68,7 +76,7 @@ app.on('ready', () => {
   )
 
   // Setup the menubar with an icon
-  tray = new Tray(nativeImage.createFromDataURL(base64Icon))
+  tray = new Tray(`${__dirname}/icons/trayTemplate.png`)
 
   // Add a click handler so that when the user clicks on the menubar icon, it shows
   // our popup window
@@ -144,7 +152,7 @@ app.on('ready', () => {
   window.setVisibleOnAllWorkspaces(true, { visibleOnFullScreen: true })
 
   // Tell the popup window to load our index.html file
-  window.loadURL(`https://gem.cserdean.me`)
+  window.loadURL(appUrl)
 
   // Only close the window on blur if dev tools isn't opened
   window.on('blur', () => {
@@ -154,7 +162,10 @@ app.on('ready', () => {
   })
 
   const handleRedirect = (e, url) => {
-    if (url != window.webContents.getURL()) {
+    const appHost = new URL(appUrl).href
+    const urlHost = new URL(url).href
+
+    if (appHost !== urlHost) {
       e.preventDefault()
       require('electron').shell.openExternal(url)
     }
