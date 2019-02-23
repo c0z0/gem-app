@@ -98,4 +98,94 @@ Input.WithLabel.propTypes = {
   inputRef: PropTypes.shape({ current: PropTypes.any })
 }
 
+const SugestionInputWrapper = styled.div`
+  position: relative;
+`
+
+const SugestionWrapper = styled.div`
+  position: absolute;
+  top: 11px;
+  left: 11px;
+`
+
+const PlaceHolder = styled.span`
+  z-index: -1;
+  color: transparent;
+  margin-right: 1px;
+`
+
+const Sugestion = styled.span`
+  color: #ccc;
+`
+
+function getTypedDomain(string) {
+  if (!string.includes('@')) return ''
+  return string.slice(string.indexOf('@') + 1)
+}
+
+const domains = [
+  'gmail.com',
+  'yahoo.com',
+  'aol.com',
+  'hotmail.com',
+  'inbox.com',
+  'outlook.com',
+  'live.com',
+  'mail.com',
+  'cserdean.me'
+]
+
+function getSuggestion(string) {
+  const typedDomain = getTypedDomain(string)
+
+  if (!typedDomain) return ''
+
+  const foundDomain = domains.find(
+    d => d.slice(0, typedDomain.length) === typedDomain
+  )
+
+  if (!foundDomain) return ''
+
+  return foundDomain.slice(typedDomain.length)
+}
+
+export function EmailInput({ innerRef, value, onChange, ...props }) {
+  const suggestion = getSuggestion(value)
+
+  return (
+    <SugestionInputWrapper>
+      {suggestion && (
+        <SugestionWrapper>
+          <PlaceHolder>{value}</PlaceHolder>
+          <Sugestion
+            onClick={() => onChange({ target: { value: value + suggestion } })}
+          >
+            {suggestion}
+          </Sugestion>
+        </SugestionWrapper>
+      )}
+      <Input
+        {...props}
+        onChange={onChange}
+        value={value}
+        ref={innerRef}
+        onKeyDown={e => {
+          if (suggestion && (e.key === 'Tab' || e.key === 'ArrowRight'))
+            onChange({ target: { value: value + suggestion } })
+        }}
+      />
+    </SugestionInputWrapper>
+  )
+}
+
+EmailInput.defaultProps = {
+  innerRef: null
+}
+
+EmailInput.propTypes = {
+  innerRef: PropTypes.shape({ current: PropTypes.any }),
+  value: PropTypes.string.isRequired,
+  onChange: PropTypes.func.isRequired
+}
+
 export default Input
