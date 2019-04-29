@@ -29,7 +29,7 @@
   },
   "scripts": {
     "dev:proxy": "API_ROOT=http://localhost:9000 next",
-    "dev": "API_ROOT=https://gem.cserdean.me/api next",
+    "dev": "API_ROOT=https://gem.cserdean.com/api next",
     "build": "next build",
     "start": "next start",
     "test": "jest",
