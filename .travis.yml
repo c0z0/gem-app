@@ -14,11 +14,11 @@ after_script:
   - cd packages/www && ../../cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
 deploy:
   - provider: script
-    script: npm install -g now && now --token=$NOW_TOKEN -e API_ROOT="https://gem.cserdean.me" && now --token=$NOW_TOKEN alias gem.cserdean.me
+    script: npm install -g now && now --token=$NOW_TOKEN -e API_ROOT="https://gem.cserdean.com" && now --token=$NOW_TOKEN alias gem.cserdean.com
     on:
       branch: master
   - provider: script
-    script: npm install -g now && now --token=$NOW_TOKEN -e API_ROOT="https://dev.gem.cserdean.me" && now --token=$NOW_TOKEN alias dev.gem.cserdean.me
+    script: npm install -g now && now --token=$NOW_TOKEN -e API_ROOT="https://dev.gem.cserdean.com" && now --token=$NOW_TOKEN alias dev.gem.cserdean.com
     on:
       branch: dev
 notifications:
