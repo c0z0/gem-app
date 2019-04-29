@@ -132,7 +132,7 @@ const domains = [
   'outlook.com',
   'live.com',
   'mail.com',
-  'cserdean.me'
+  'cserdean.com'
 ]
 
 function getSuggestion(string) {

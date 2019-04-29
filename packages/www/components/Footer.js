@@ -65,7 +65,7 @@ export default function Footer() {
           <Title>Gem</Title>
         </Logo>
         <p>
-          Made by <Link href="https://cserdean.me">cserdean.me.</Link>
+          Made by <Link href="https://cserdean.com">cserdean.com.</Link>
         </p>
       </FooterContainer>
     </Border>

@@ -23,7 +23,7 @@ autoLauncher.isEnabled().then(function(isEnabled) {
   autoLaunchEnabled = isEnabled
 })
 
-const appUrl = 'http://gem.cserdean.me'
+const appUrl = 'http://gem.cserdean.com'
 
 // This method is called once Electron is ready to run our code
 // It is effectively the main method of our Electron app

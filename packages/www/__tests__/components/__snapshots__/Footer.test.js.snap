@@ -141,9 +141,9 @@ exports[`Footer matches snapshot 1`] = `
         Made by 
         <a
           class="c5"
-          href="https://cserdean.me"
+          href="https://cserdean.com"
         >
-          cserdean.me.
+          cserdean.com.
         </a>
       </p>
     </div>

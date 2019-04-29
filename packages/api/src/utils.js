@@ -42,7 +42,7 @@ async function sendEmail({ to, token, verificationCode }) {
     },
     body: JSON.stringify({
       personalizations: [{ to: [{ email: to }] }],
-      from: { email: 'gem@cserdean.me' },
+      from: { email: 'gem@cserdean.com' },
       subject: `Gem Login Verification (code: ${verificationCode})`,
       content: [
         {
@@ -85,7 +85,7 @@ async function fetchTitle(url) {
 }
 
 async function shortenUrl(url) {
-  const res = await fetch('https://s.cserdean.me/api/sh', {
+  const res = await fetch('https://s.cserdean.com/api/sh', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
@@ -95,7 +95,7 @@ async function shortenUrl(url) {
 
   if (!res.ok) return url
 
-  return 'https://s.cserdean.me/' + (await res.json()).id
+  return 'https://s.cserdean.com/' + (await res.json()).id
 }
 
 module.exports = {
