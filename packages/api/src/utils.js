@@ -65,12 +65,16 @@ function generateId(len = 10) {
 }
 
 async function getViewer(token) {
-  const { id } = jwt.verify(
-    token.slice('Bearer '.length),
-    process.env.JWT_SECRET
-  )
+  try {
+    const { id } = jwt.verify(
+      token.slice('Bearer '.length),
+      process.env.JWT_SECRET
+    )
 
-  return await User.findById(id)
+    return await User.findById(id)
+  } catch (e) {
+    return {}
+  }
 }
 
 async function fetchTitle(url) {
