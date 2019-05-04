@@ -13,8 +13,6 @@ module.exports = {
     allUsers: async () => await User.find({}),
     checkLogin: async (_, { id }) => {
       const loginRequest = await LoginRequest.findById(id)
-      if (!loginRequest.pending)
-        await LoginRequest.findByIdAndDelete(loginRequest._id)
 
       return loginRequest
     },
