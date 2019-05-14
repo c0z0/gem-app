@@ -75,13 +75,23 @@ module.exports = {
         userId: viewer._id,
         tags,
         favorite,
-        title
+        title: title || parsedUrl.host
       })
 
       return gem
     },
     deleteGem: async (_, { id }, { viewer }) =>
-      await Gem.findOneAndDelete({ _id: id, userId: viewer._id }),
+      await Gem.findOneAndUpdate(
+        { _id: id, userId: viewer._id },
+        { deleted: true },
+        { new: true }
+      ),
+    undoDeleteGem: async (_, { id }, { viewer }) =>
+      await Gem.findOneAndUpdate(
+        { _id: id, userId: viewer._id },
+        { deleted: false },
+        { new: true }
+      ),
     deleteNote: async (_, { id }, { viewer }) =>
       await Note.findOneAndDelete({ _id: id, userId: viewer._id }),
     deleteFolder: async (_, { id }, { viewer }) =>
@@ -128,9 +138,9 @@ module.exports = {
   User: {
     id: ({ _id }) => _id,
     gems: async ({ _id }, { tagged }) =>
-      (await Gem.find({ userId: _id }).sort('-createdAt')).filter(
-        g => !tagged || g.tags.includes(tagged)
-      ),
+      (await Gem.find({ userId: _id, deleted: false }).sort(
+        '-createdAt'
+      )).filter(g => !tagged || g.tags.includes(tagged)),
     notes: async ({ _id }) =>
       await Note.find({ userId: _id }).sort('-createdAt'),
     folders: async ({ _id }) =>

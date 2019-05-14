@@ -28,7 +28,7 @@ module.exports = gql`
     id: ID!
     displayUrl: String!
     href: String!
-    title: String
+    title: String!
     folderId: ID
     tags: [String]!
     owner: User!
@@ -64,6 +64,7 @@ module.exports = gql`
 
     createGem(url: String!, tags: [String], favorite: Boolean): Gem!
     deleteGem(id: ID!): Gem
+    undoDeleteGem(id: ID!): Gem
     toggleFavoriteGem(id: ID!): Gem!
     moveGem(id: ID!, folderId: ID): Gem!
   }
