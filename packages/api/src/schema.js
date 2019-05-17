@@ -62,7 +62,12 @@ module.exports = gql`
     login(email: String!): LoginRequest
     verifyLogin(token: String!): LoginRequest
 
-    createGem(url: String!, tags: [String], favorite: Boolean): Gem!
+    createGem(
+      url: String!
+      tags: [String]
+      favorite: Boolean
+      folderId: ID
+    ): Gem!
     deleteGem(id: ID!): Gem
     undoDeleteGem(id: ID!): Gem
     toggleFavoriteGem(id: ID!): Gem!

@@ -59,7 +59,7 @@ module.exports = {
       }),
     createFolder: async (_, { title }, { viewer }) =>
       await Folder.create({ userId: viewer._id, title }),
-    createGem: async (_, { url, tags, favorite }, { viewer }) => {
+    createGem: async (_, { url, tags, favorite, folderId }, { viewer }) => {
       const parsedUrl = validateUrl(url)
 
       if (!parsedUrl) throw new Error('Invalid url')
@@ -71,6 +71,7 @@ module.exports = {
 
       const gem = await Gem.create({
         displayUrl: parsedUrl.host,
+        folderId: folderId,
         href: parsedUrl.href,
         userId: viewer._id,
         tags,
