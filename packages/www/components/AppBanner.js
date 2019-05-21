@@ -32,6 +32,9 @@ const CloseButton = styled.button`
   top: 2px;
   right: 4px;
   padding: 0;
+  outline: none;
+  background: none;
+  border: none;
   transform: rotate(45deg);
 `
 
