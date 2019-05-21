@@ -5,6 +5,7 @@ import React from 'react'
 import { ApolloProvider } from 'react-apollo'
 import { ApolloProvider as ApolloHooksProvider } from 'react-apollo-hooks'
 
+import AppBanner from '../components/AppBanner'
 import withApollo from '../lib/withApollo'
 import theme from '../lib/theme'
 
@@ -36,6 +37,7 @@ class MyApp extends App {
             <ThemeProvider theme={theme}>
               <React.Fragment>
                 <GlobalStyle />
+                <AppBanner />
                 <Component {...pageProps} />
               </React.Fragment>
             </ThemeProvider>
