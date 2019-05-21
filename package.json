@@ -1,5 +1,7 @@
 {
   "name": "gem-monorepo",
-  "private": "true",
-  "workspaces": ["packages/*"]
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ]
 }
