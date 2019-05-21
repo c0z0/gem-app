@@ -3,13 +3,18 @@
   "version": 2,
   "regions": ["bru"],
   "builds": [
-    {"src": "packages/api/src/index.js", "use": "@now/node-server"},
-    {"src": "packages/www/package.json", "use": "@now/next"}
+    { "src": "packages/api/src/index.js", "use": "@now/node-server" },
+    { "src": "packages/www/package.json", "use": "@now/next" }
   ],
   "routes": [
-    {"src": "/api", "dest": "packages/api/src/index.js"},
-    {"src": "/editor/(.*)", "dest": "packages/www/editor?n=$1"},
-    {"src": "/(.*)", "dest": "packages/www/$1"}
+    { "src": "/api", "dest": "packages/api/src/index.js" },
+    { "src": "/editor/(.*)", "dest": "packages/www/editor?n=$1" },
+    {
+      "src": "/download-apk",
+      "status": 301,
+      "headers": { "Location": "https://app.gem.cserdean.com" }
+    },
+    { "src": "/(.*)", "dest": "packages/www/$1" }
   ],
   "env": {
     "MONGO_URI": "@gem_uri",
