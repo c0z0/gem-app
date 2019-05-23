@@ -1,6 +1,7 @@
 const jwt = require('jsonwebtoken')
 
 const User = require('./models/User')
+const Portal = require('./models/Portal')
 const Gem = require('./models/Gem')
 const Folder = require('./models/Folder')
 const GraphQLJSON = require('graphql-type-json')
@@ -18,7 +19,9 @@ module.exports = {
     },
     viewer: (_, __, { viewer }) => viewer,
     note: async (_, { id }, { viewer }) =>
-      await Note.findOne({ _id: id, userId: viewer._id })
+      await Note.findOne({ _id: id, userId: viewer._id }),
+    portal: async (_, { code }, { viewer }) =>
+      await Portal.findOne({ code: code, userId: viewer._id })
   },
   Mutation: {
     login: async (_, { email }) => {
@@ -57,6 +60,7 @@ module.exports = {
       await Note.create({
         userId: viewer._id
       }),
+
     createFolder: async (_, { title }, { viewer }) =>
       await Folder.create({ userId: viewer._id, title }),
     createGem: async (_, { url, tags, favorite, folderId }, { viewer }) => {
@@ -103,6 +107,8 @@ module.exports = {
         { content, title },
         { new: true }
       ),
+    createPortal: async (_, { code, href }, { viewer }) =>
+      await Portal.create({ code, href, userId: viewer._id }),
     toggleFavoriteGem: async (_, { id }, { viewer }) => {
       const gem = await Gem.findOne({ _id: id, userId: viewer._id })
       const newGem = await Gem.findByIdAndUpdate(
@@ -127,6 +133,7 @@ module.exports = {
     id: ({ _id }) => _id,
     user: async ({ userId }) => await User.findById(userId)
   },
+
   Gem: {
     id: ({ _id }) => _id,
     owner: async ({ userId }) => await User.findById(userId),
@@ -151,5 +158,11 @@ module.exports = {
     id: ({ _id }) => _id,
     owner: async ({ userId }) => await User.findById(userId)
   },
+
+  Portal: {
+    id: ({ _id }) => _id,
+    owner: async ({ userId }) => await User.findById(userId)
+  },
+
   JSON: GraphQLJSON
 }

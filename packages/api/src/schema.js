@@ -43,12 +43,20 @@ module.exports = gql`
     verificationCode: String!
   }
 
+  type Portal {
+    href: String!
+    code: String!
+    id: ID!
+    owner: User!
+  }
+
   type Query {
     allUsers: [User]!
     viewer: User
     user(id: ID, email: String): User
     note(id: ID!): Note
     checkLogin(id: ID!): LoginRequest
+    portal(code: String!): Portal
   }
 
   type Mutation {
@@ -61,6 +69,7 @@ module.exports = gql`
 
     login(email: String!): LoginRequest
     verifyLogin(token: String!): LoginRequest
+    createPortal(code: String!, href: String!): Portal!
 
     createGem(
       url: String!
