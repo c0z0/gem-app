@@ -1,6 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 import PropTypes from 'prop-types'
+import Link from 'next/link'
 
 import Container from './Container'
 import { Diamond } from './Svg'
@@ -16,6 +17,7 @@ const MenuContainer = styled(Container)`
 const Logo = styled.div`
   display: flex;
   align-items: center;
+  cursor: pointer;
 `
 
 const Title = styled.span`
@@ -42,16 +44,23 @@ const MenuItem = styled.a`
   &:hover {
     color: #484848;
   }
+
+  ${({ active }) => active && 'color: #484848;'}
 `
 
-export default function Menu({ onLogout }) {
+export default function Menu({ onLogout, portalActive }) {
   return (
     <MenuContainer>
-      <Logo>
-        <StyledDiamond />
-        <Title>Gem</Title>
-      </Logo>
+      <Link href="/">
+        <Logo>
+          <StyledDiamond />
+          <Title>Gem</Title>
+        </Logo>
+      </Link>
       <div>
+        <Link href="/portal" passHref>
+          <MenuItem active={portalActive}>Portal</MenuItem>
+        </Link>
         <MenuItem href="" onClick={onLogout}>
           Logout
         </MenuItem>
@@ -61,6 +70,11 @@ export default function Menu({ onLogout }) {
   )
 }
 
+Menu.defaultProps = {
+  portalActive: false
+}
+
 Menu.propTypes = {
-  onLogout: PropTypes.func.isRequired
+  onLogout: PropTypes.func.isRequired,
+  portalActive: PropTypes.bool
 }
