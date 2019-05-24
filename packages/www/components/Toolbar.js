@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import styled from 'styled-components'
 import PropTypes from 'prop-types'
 
@@ -81,6 +81,17 @@ export default function Toolbar({
   favorites
 }) {
   const [newGemVisible, setNewGemVisible] = useState(false)
+  const inputRef = useRef(null)
+
+  useEffect(() => {
+    function onKeyPress(event) {
+      if (event.key === 'k' && (event.metaKey || event.ctrlKey))
+        inputRef.current.focus()
+    }
+    document.addEventListener('keydown', onKeyPress)
+
+    return () => document.removeEventListener('keydown', onKeyPress)
+  })
 
   return (
     <SubMenu
@@ -97,6 +108,7 @@ export default function Toolbar({
             </span>
           </Action>
           <Input
+            ref={inputRef}
             placeholder="Search..."
             value={searchQuery}
             onChange={({ target: { value } }) => onSearchQueryChange(value)}
