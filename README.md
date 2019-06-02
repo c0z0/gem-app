@@ -11,4 +11,4 @@
 
 # [Gem](https://gem.cserdean.me)
 
-## Tiny web app for keeping your online finds
+## Tiny web app for keeping your online finds.
