@@ -51,6 +51,8 @@ module.exports = gql`
   }
 
   type Query {
+    about: String!
+
     allUsers: [User]!
     viewer: User
     user(id: ID, email: String): User
