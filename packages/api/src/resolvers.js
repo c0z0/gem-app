@@ -11,6 +11,7 @@ const { sendEmail, fetchTitle, validateUrl } = require('./utils')
 
 module.exports = {
   Query: {
+    about: () => 'Built with ♥️ by cserdean.com.',
     allUsers: async () => await User.find({}),
     checkLogin: async (_, { id }) => {
       const loginRequest = await LoginRequest.findById(id)
