@@ -70,6 +70,7 @@ module.exports = gql`
     deleteFolder(id: ID!): Folder!
 
     login(email: String!): LoginRequest
+    googleLogin(token: String!): LoginRequest
     verifyLogin(token: String!): LoginRequest
     createPortal(code: String!, href: String!): Portal!
 

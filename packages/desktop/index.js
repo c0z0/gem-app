@@ -119,6 +119,11 @@ app.on('ready', () => {
         label: 'Open Developer Tools',
         click: () => window.openDevTools({ mode: 'detach' })
       },
+      {
+        type: 'normal',
+        label: 'Reload',
+        click: () => window.reload()
+      },
       { type: 'separator' },
       {
         label: 'Quit Gem',

@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken')
+const { OAuth2Client } = require('google-auth-library')
 
 const User = require('./models/User')
 const Portal = require('./models/Portal')
@@ -8,6 +9,10 @@ const GraphQLJSON = require('graphql-type-json')
 const Note = require('./models/Note')
 const LoginRequest = require('./models/LoginRequest')
 const { sendEmail, fetchTitle, validateUrl } = require('./utils')
+
+const CLIENT_ID =
+  '795169533128-s76506bnacmbe77rto11vs2g9vs72rgg.apps.googleusercontent.com'
+const googleAuth = new OAuth2Client(CLIENT_ID)
 
 module.exports = {
   Query: {
@@ -39,6 +44,27 @@ module.exports = {
         to: email,
         verificationCode: loginRequest.verificationCode,
         token: loginRequest.secretId
+      })
+
+      return loginRequest
+    },
+    googleLogin: async (_, { token }) => {
+      const ticket = await googleAuth.verifyIdToken({
+        idToken: token,
+        audience: CLIENT_ID
+      })
+
+      const { email } = ticket.getPayload()
+
+      let user = await User.findOne({ email })
+      if (!user) {
+        user = await User.create({ email })
+      }
+
+      const loginRequest = await LoginRequest.create({
+        userId: user._id,
+        pending: false,
+        token: jwt.sign({ id: user.i }, process.env.JWT_SECRET)
       })
 
       return loginRequest
