@@ -170,8 +170,10 @@ export function EmailInput({ innerRef, value, onChange, ...props }) {
         value={value}
         ref={innerRef}
         onKeyDown={e => {
-          if (suggestion && (e.key === 'Tab' || e.key === 'ArrowRight'))
+          if (suggestion && (e.key === 'Tab' || e.key === 'ArrowRight')) {
+            e.preventDefault()
             onChange({ target: { value: value + suggestion } })
+          }
         }}
       />
     </SugestionInputWrapper>

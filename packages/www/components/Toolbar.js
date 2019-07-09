@@ -12,6 +12,7 @@ const Action = styled.button`
   background: white;
   z-index: 2;
   cursor: pointer;
+  margin: 0;
   padding: 0 20px;
   line-height: 2.5rem;
   height: 2.5rem;
@@ -44,6 +45,7 @@ const Input = styled.input`
   transition: all 0.2s;
   border-left: none;
   border-radius: 0 7px 7px 0;
+  margin: 0;
 
   &::placeholder {
     color: #ccc;
