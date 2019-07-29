@@ -16,6 +16,21 @@ export default class MyDocument extends Document {
     return (
       <html lang="en">
         <Head>
+          <div
+            // eslint-disable-next-line
+            dangerouslySetInnerHTML={{
+              __html: `<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-86522507-3"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-86522507-3');
+</script>
+`
+            }}
+          />
           <link
             rel="apple-touch-icon"
             sizes="180x180"
