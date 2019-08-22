@@ -47,7 +47,7 @@ module.exports = gql`
     href: String!
     code: String!
     id: ID!
-    owner: User!
+    owner: User
   }
 
   type Query {
