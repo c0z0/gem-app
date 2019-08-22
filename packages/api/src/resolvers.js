@@ -10,8 +10,7 @@ const Note = require('./models/Note')
 const LoginRequest = require('./models/LoginRequest')
 const { sendEmail, fetchTitle, validateUrl } = require('./utils')
 
-const CLIENT_ID =
-  '795169533128-s76506bnacmbe77rto11vs2g9vs72rgg.apps.googleusercontent.com'
+const CLIENT_ID = process.env.GOOGLE_CLIENT_ID
 const googleAuth = new OAuth2Client(CLIENT_ID)
 
 module.exports = {
@@ -26,8 +25,7 @@ module.exports = {
     viewer: (_, __, { viewer }) => viewer,
     note: async (_, { id }, { viewer }) =>
       await Note.findOne({ _id: id, userId: viewer._id }),
-    portal: async (_, { code }, { viewer }) =>
-      await Portal.findOne({ code: code, userId: viewer._id })
+    portal: async (_, { code }) => await Portal.findOne({ code: code })
   },
   Mutation: {
     login: async (_, { email }) => {
@@ -134,8 +132,8 @@ module.exports = {
         { content, title },
         { new: true }
       ),
-    createPortal: async (_, { code, href }, { viewer }) =>
-      await Portal.create({ code, href, userId: viewer._id }),
+    createPortal: async (_, { code, href }) =>
+      await Portal.create({ code, href }),
     toggleFavoriteGem: async (_, { id }, { viewer }) => {
       const gem = await Gem.findOne({ _id: id, userId: viewer._id })
       const newGem = await Gem.findByIdAndUpdate(
