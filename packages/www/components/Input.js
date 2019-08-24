@@ -103,7 +103,7 @@ Input.Code = styled.input`
   text-align: center;
   font-size: 16px;
   outline: none;
-  color: #222;
+  color: #484848;
   border: none;
   transition: all 0.2s;
   margin: 1rem 0;
@@ -123,6 +123,10 @@ Input.Code = styled.input`
   ${({ disabled }) =>
     disabled &&
     `border-color: #ddd; color: #ddd; background: #fafafa; cursor: not-allowed;`}
+
+  @media (${({ theme }) => theme.b.phoneOnly}) {
+    margin: 1em 0 1em 0;
+  }
 `
 
 const SugestionInputWrapper = styled.div`

@@ -39,6 +39,10 @@ const Center = styled.div`
 
 const CenterInput = styled.div`
   align-self: center;
+`
+
+const CenterCodeInput = styled.div`
+  align-self: center;
   display: flex;
   align-items: center;
   flex-direction: column;
@@ -60,10 +64,6 @@ const PORTAL_MUTATION = gql`
       code
     }
   }
-`
-
-const PStyled = styled(P)`
-  margin: 0;
 `
 
 const Code = styled(H1)`
@@ -122,9 +122,14 @@ function PortalSwitch({ value, onClick }) {
 }
 
 PortalSwitch.propTypes = {
-  value: PropTypes.string.isRequired,
+  value: PropTypes.bool.isRequired,
   onClick: PropTypes.func.isRequired
 }
+
+const PStyled = styled(P)`
+  margin-bottom: -16px;
+  margin-top: 32px;
+`
 
 const Form = styled.form`
   display: flex;
@@ -152,27 +157,35 @@ function SendUrl() {
         mutate({ variables: { code: codeState, href: hrefState } })
       }}
     >
-      <CenterInput>
-        <PStyled>Enter the code:</PStyled>
+      <CenterCodeInput>
+        <p>Enter the code:</p>
         <Input.Code
           disabled={loadingState}
           value={codeState}
           placeholder="* * *"
           onChange={({ target: { value } }) => setCodeState(sanitizeID(value))}
         />
-      </CenterInput>
-      <PStyled>Enter the href to teleport</PStyled>
-      <Input
-        value={hrefState}
-        disabled={loadingState}
-        placeholder="http://example.com"
-        onChange={({ target: { value } }) => setHrefState(value)}
-      />
-      <Button
-        disabled={loadingState || (!hrefState.length || codeState.length !== 3)}
-      >
-        {!loadingState ? 'Send' : ['Loading', <Button.Elipsis />]}
-      </Button>
+      </CenterCodeInput>
+      {codeState.length === 3 ? (
+        <React.Fragment>
+          <CenterInput>
+            <PStyled>Enter the href to teleport</PStyled>
+            <Input
+              value={hrefState}
+              disabled={loadingState}
+              placeholder="http://example.com"
+              onChange={({ target: { value } }) => setHrefState(value)}
+            />
+          </CenterInput>
+          <Button
+            disabled={
+              loadingState || (!hrefState.length || codeState.length !== 3)
+            }
+          >
+            {!loadingState ? 'Send' : ['Loading', <Button.Elipsis />]}
+          </Button>
+        </React.Fragment>
+      ) : null}
     </Form>
   )
 }
