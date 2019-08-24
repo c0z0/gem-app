@@ -25,7 +25,7 @@ module.exports = {
     viewer: (_, __, { viewer }) => viewer,
     note: async (_, { id }, { viewer }) =>
       await Note.findOne({ _id: id, userId: viewer._id }),
-    portal: async (_, { code }) => await Portal.findOne({ code: code })
+    portal: async (_, { code }) => await Portal.findOneAndDelete({ code: code })
   },
   Mutation: {
     login: async (_, { email }) => {

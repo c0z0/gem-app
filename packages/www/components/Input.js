@@ -98,6 +98,33 @@ Input.WithLabel.propTypes = {
   inputRef: PropTypes.shape({ current: PropTypes.any })
 }
 
+Input.Code = styled.input`
+  width: 106px;
+  text-align: center;
+  font-size: 16px;
+  outline: none;
+  color: #222;
+  border: none;
+  transition: all 0.2s;
+  margin: 1rem 0;
+  background: #f9f9f9;
+  margin-top: 0px;
+  font-weight: 600;
+  font-size: 32px;
+
+  padding: 16px 32px;
+  letter-spacing: 8px;
+  border-radius: 16px;
+
+  &::placeholder {
+    color: #ddd;
+  }
+
+  ${({ disabled }) =>
+    disabled &&
+    `border-color: #ddd; color: #ddd; background: #fafafa; cursor: not-allowed;`}
+`
+
 const SugestionInputWrapper = styled.div`
   position: relative;
 `

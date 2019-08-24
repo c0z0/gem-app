@@ -24,13 +24,24 @@ function sanitizeID(code) {
     .split('')
     .filter(c => s.includes(c))
     .join('')
+    .slice(0, 3)
 }
+
+const PaddingTop = styled.div`
+  padding-top: 64px;
+`
 
 const Center = styled.div`
   display: flex;
   align-items: center;
   flex-direction: column;
-  padding-top: 64px;
+`
+
+const CenterInput = styled.div`
+  align-self: center;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
 `
 
 const PORTAL_QUERY = gql`
@@ -49,6 +60,10 @@ const PORTAL_MUTATION = gql`
       code
     }
   }
+`
+
+const PStyled = styled(P)`
+  margin: 0;
 `
 
 const Code = styled(H1)`
@@ -113,9 +128,8 @@ PortalSwitch.propTypes = {
 
 const Form = styled.form`
   display: flex;
-  align-items: center;
+  align-items: start;
   flex-direction: column;
-  padding-top: 64px;
 `
 
 function SendUrl() {
@@ -138,16 +152,20 @@ function SendUrl() {
         mutate({ variables: { code: codeState, href: hrefState } })
       }}
     >
-      <Input
-        disabled={loadingState}
-        value={codeState}
-        placeholder="Enter the unique code"
-        onChange={({ target: { value } }) => setCodeState(sanitizeID(value))}
-      />
+      <CenterInput>
+        <PStyled>Enter the code:</PStyled>
+        <Input.Code
+          disabled={loadingState}
+          value={codeState}
+          placeholder="* * *"
+          onChange={({ target: { value } }) => setCodeState(sanitizeID(value))}
+        />
+      </CenterInput>
+      <PStyled>Enter the href to teleport</PStyled>
       <Input
         value={hrefState}
         disabled={loadingState}
-        placeholder="Enter the href"
+        placeholder="http://example.com"
         onChange={({ target: { value } }) => setHrefState(value)}
       />
       <Button
@@ -186,15 +204,17 @@ export default function Portal({ code }) {
 
   return (
     <Container>
-      <Center>
-        {/* <StyledDiamond /> */}
-        <H1>Gem portal</H1>
-        <PortalSwitch
-          value={switchState}
-          onClick={() => setSwitchState(!switchState)}
-        />
-        {!switchState ? <RecieveUrl code={code} /> : <SendUrl />}
-      </Center>
+      <PaddingTop>
+        <Center>
+          {/* <StyledDiamond /> */}
+          <H1>Gem portal</H1>
+          <PortalSwitch
+            value={switchState}
+            onClick={() => setSwitchState(!switchState)}
+          />
+          {!switchState ? <RecieveUrl code={code} /> : <SendUrl />}
+        </Center>
+      </PaddingTop>
     </Container>
   )
 }
