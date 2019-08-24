@@ -133,7 +133,7 @@ module.exports = {
         { new: true }
       ),
     createPortal: async (_, { code, href }) =>
-      await Portal.create({ code, href }),
+      await Portal.create({ code, href: validateUrl(href).href }),
     toggleFavoriteGem: async (_, { id }, { viewer }) => {
       const gem = await Gem.findOne({ _id: id, userId: viewer._id })
       const newGem = await Gem.findByIdAndUpdate(
