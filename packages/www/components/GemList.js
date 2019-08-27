@@ -3,7 +3,6 @@ import { useQuery, useMutation } from 'react-apollo-hooks'
 import styled from 'styled-components'
 import Router from 'next/router'
 import gql from 'graphql-tag'
-import memoize from 'lodash.memoize'
 import PropTypes from 'prop-types'
 
 import Menu from './Menu'
@@ -26,6 +25,20 @@ const GemsContainer = styled(Container)`
 
   @media (${({ theme }) => theme.b.phoneOnly}) {
     padding-bottom: 187px;
+  }
+`
+
+const SEARCH_GEMS = gql`
+  query searchGems($query: String!) {
+    search(query: $query) {
+      id
+      folderId
+      favorite
+      title
+      displayUrl
+      href
+      tags
+    }
   }
 `
 
@@ -95,37 +108,23 @@ export default function GemList({ favorites }) {
   const [newGem, setNewGem] = useState({ url: '', tags: [] })
   const [searchQuery, setSearchQuery] = useState('')
 
-  function filterGems(gems, sq, showFavorites) {
-    const r = /(tagged|tag):([\w-]+)/g
-    const nameQuery = sq
-      .replace(r, '')
-      .trim()
-      .toLowerCase()
-
-    let q = sq
-
-    const tags = []
-
-    while (q.match(r)) {
-      const t = r.exec(q)[2]
-      tags.push(t)
-
-      q = q.replace(`tagged:${t}`, '')
-      q = q.replace(`tag:${t}`, '')
-    }
-
-    return gems.filter(
-      g =>
-        (g.title.toLowerCase().includes(nameQuery) ||
-          g.displayUrl.toLowerCase().includes(nameQuery)) &&
-        tags.reduce((p, c) => p && g.tags.includes(c), true) &&
-        (g.favorite || !showFavorites)
-    )
+  function filterGems(gems, showFavorites) {
+    return gems.filter(g => g.favorite || !showFavorites)
   }
 
-  const memoizedFilterGems = memoize(filterGems)
+  function filterFolders(folders, gems, empty) {
+    if (empty)
+      return folders.filter(
+        f => gems.filter(g => g.folderId === f.id).length === 0
+      )
+
+    return folders.filter(f => gems.filter(g => g.folderId === f.id).length > 0)
+  }
 
   const { data, loading } = useQuery(GEMS_QUERY)
+  const { data: searchData, loading: searchLoading } = useQuery(SEARCH_GEMS, {
+    variables: { query: searchQuery }
+  })
 
   const createGem = useMutation(CREATE_GEM_MUTATION, {
     update: (cache, { data: { createGem: createGemData } }) => {
@@ -179,7 +178,10 @@ export default function GemList({ favorites }) {
   const moveGem = useMutation(MOVE_GEM_MUTATION, {})
 
   function renderGems() {
-    const gems = memoizedFilterGems(data.viewer.gems, searchQuery, favorites)
+    const gems = filterGems(
+      searchQuery.length ? searchData.search : data.viewer.gems,
+      favorites
+    )
 
     if (!gems.length)
       return (
@@ -237,12 +239,17 @@ export default function GemList({ favorites }) {
 
     return (
       <React.Fragment>
-        {data.viewer.folders.map(f => (
-          <Folder key={f.id} {...f}>
+        {filterFolders(data.viewer.folders, gems, false).map(f => (
+          <Folder key={f.id} {...f} searching={searchQuery.length > 0}>
             {gems.filter(g => g.folderId === f.id).map(renderGem)}
           </Folder>
         ))}
         {gems.filter(g => !g.folderId).map(renderGem)}
+        {filterFolders(data.viewer.folders, gems, true).map(f => (
+          <Folder key={f.id} {...f} searching={searchQuery.length > 0}>
+            {gems.filter(g => g.folderId === f.id).map(renderGem)}
+          </Folder>
+        ))}
       </React.Fragment>
     )
   }
@@ -289,8 +296,16 @@ export default function GemList({ favorites }) {
         newGemLoading={false}
       />
       <GemsContainer>
-        <H1>{favorites ? 'Favorite' : 'My'} Gems</H1>
-        {loading ? (
+        <H1>
+          {searchQuery.length
+            ? 'Search results'
+            : `${favorites ? 'Favorite' : 'My'} Gems`}
+        </H1>
+        {(searchQuery.length ? (
+          searchLoading
+        ) : (
+          loading
+        )) ? (
           <Title style={{ textAlign: 'center' }}>
             <LoadingElipsis />
           </Title>

@@ -19,6 +19,9 @@
   "env": {
     "MONGO_URI": "@gem_uri",
     "JWT_SECRET": "@gem_jwt",
-    "SG_KEY": "@sg_key"
+    "SG_KEY": "@sg_key",
+    "ALGOLIA_APP_ID": "@algolia_app_id",
+    "ALGOLIA_SEARCH": "@algolia_search",
+    "ALGOLIA_ADMIN": "@algolia_admin"
   }
 }

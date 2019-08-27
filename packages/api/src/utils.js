@@ -1,16 +1,67 @@
-const secrets = require('./secrets.json')
 const fetch = require('isomorphic-fetch')
 const crypto = require('crypto')
 const jwt = require('jsonwebtoken')
-const User = require('./models/User')
 const cheerio = require('cheerio')
 const url = require('url')
+const algoliasearch = require('algoliasearch')
+
+const secrets = require('./secrets.json')
+const User = require('./models/User')
 const emailTemplate = require('./email-template')
+
+const algoliaClient = algoliasearch(
+  process.env.ALGOLIA_APP_ID,
+  process.env.ALGOLIA_ADMIN
+)
+
+const algoliaIndex = algoliaClient.initIndex('gems')
+
+const addToIndex = object =>
+  // eslint-disable-next-line no-undef
+  new Promise((res, rej) => {
+    object.objectID = object._id
+
+    algoliaIndex.addObject(object, err => {
+      if (err) return rej(err)
+      res()
+    })
+  })
+
+const updateIndex = object =>
+  // eslint-disable-next-line no-undef
+  new Promise((res, rej) => {
+    object.objectID = object._id
+
+    algoliaIndex.partialUpdateObject(object, err => {
+      if (err) return rej(err)
+      res()
+    })
+  })
 
 const apiRoot =
   process.env.NODE_ENV === 'production'
     ? process.env.API_ROOT
     : 'http://localhost:3000'
+
+function search(query, userId) {
+  // eslint-disable-next-line no-undef
+  return new Promise((resolve, reject) => {
+    algoliaIndex.search(
+      {
+        query
+      },
+      (err, res) => {
+        if (err) return reject(err)
+        res.hits.forEach(h => {
+          console.log({ deleted: h.deleted })
+        })
+        resolve(
+          res.hits.filter(h => h.userId === userId.toString() && !h.deleted)
+        )
+      }
+    )
+  })
+}
 
 function validateUrl(string) {
   let u = url.parse(string)
@@ -77,15 +128,19 @@ async function getViewer(token) {
   }
 }
 
-async function fetchTitle(url) {
+async function fetchGemDetails(url) {
   const res = await fetch(url)
 
-  if (!res.ok) return null
+  if (!res.ok) return { title: null, body: null }
 
   const $ = cheerio.load(await res.text())
-  return $('head > title')
-    .text()
-    .trim()
+
+  return {
+    title: $('head > title')
+      .text()
+      .trim(),
+    body: $('meta[property="og:description"]').attr('content')
+  }
 }
 
 async function shortenUrl(url) {
@@ -108,7 +163,10 @@ module.exports = {
   generateId,
   apiRoot,
   getViewer,
-  fetchTitle,
+  fetchGemDetails,
   validateUrl,
-  shortenUrl
+  shortenUrl,
+  search,
+  addToIndex,
+  updateIndex
 }

@@ -8,7 +8,14 @@ const Folder = require('./models/Folder')
 const GraphQLJSON = require('graphql-type-json')
 const Note = require('./models/Note')
 const LoginRequest = require('./models/LoginRequest')
-const { sendEmail, fetchTitle, validateUrl } = require('./utils')
+const {
+  sendEmail,
+  fetchGemDetails,
+  validateUrl,
+  search,
+  addToIndex,
+  updateIndex
+} = require('./utils')
 
 const CLIENT_ID = process.env.GOOGLE_CLIENT_ID
 const googleAuth = new OAuth2Client(CLIENT_ID)
@@ -25,7 +32,9 @@ module.exports = {
     viewer: (_, __, { viewer }) => viewer,
     note: async (_, { id }, { viewer }) =>
       await Note.findOne({ _id: id, userId: viewer._id }),
-    portal: async (_, { code }) => await Portal.findOneAndDelete({ code: code })
+    portal: async (_, { code }) =>
+      await Portal.findOneAndDelete({ code: code }),
+    search: async (_, { query }, { viewer }) => await search(query, viewer._id)
   },
   Mutation: {
     login: async (_, { email }) => {
@@ -93,10 +102,12 @@ module.exports = {
 
       if (!parsedUrl) throw new Error('Invalid url')
 
-      const titlePromise = fetchTitle(parsedUrl.href)
+      const detailsPromise = fetchGemDetails(parsedUrl.href)
       // const shortenPromise = shortenUrl(parsedUrl.href)
 
-      const [title] = [await titlePromise /*, await shortenPromise*/]
+      const [{ title, body }] = [
+        await detailsPromise /*, await shortenPromise*/
+      ]
 
       const gem = await Gem.create({
         displayUrl: parsedUrl.host,
@@ -105,23 +116,36 @@ module.exports = {
         userId: viewer._id,
         tags,
         favorite,
-        title: title || parsedUrl.host
+        title: title || parsedUrl.host,
+        body
       })
+
+      await addToIndex(gem._doc)
 
       return gem
     },
-    deleteGem: async (_, { id }, { viewer }) =>
-      await Gem.findOneAndUpdate(
+    deleteGem: async (_, { id }, { viewer }) => {
+      const gem = await Gem.findOneAndUpdate(
         { _id: id, userId: viewer._id },
         { deleted: true },
         { new: true }
-      ),
-    undoDeleteGem: async (_, { id }, { viewer }) =>
-      await Gem.findOneAndUpdate(
+      )
+
+      await updateIndex(gem._doc)
+
+      return gem
+    },
+    undoDeleteGem: async (_, { id }, { viewer }) => {
+      const gem = await Gem.findOneAndUpdate(
         { _id: id, userId: viewer._id },
         { deleted: false },
         { new: true }
-      ),
+      )
+
+      await updateIndex(gem._doc)
+
+      return gem
+    },
     deleteNote: async (_, { id }, { viewer }) =>
       await Note.findOneAndDelete({ _id: id, userId: viewer._id }),
     deleteFolder: async (_, { id }, { viewer }) =>

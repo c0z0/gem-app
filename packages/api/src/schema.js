@@ -33,6 +33,7 @@ module.exports = gql`
     tags: [String]!
     owner: User!
     favorite: Boolean!
+    body: String
   }
 
   type LoginRequest {
@@ -55,6 +56,7 @@ module.exports = gql`
 
     allUsers: [User]!
     viewer: User
+    search(query: String!): [Gem]!
     user(id: ID, email: String): User
     note(id: ID!): Note
     checkLogin(id: ID!): LoginRequest
