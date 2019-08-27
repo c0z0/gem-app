@@ -1,7 +1,11 @@
 {
   "name": "gem-monorepo",
   "private": true,
-  "workspaces": [
-    "packages/*"
-  ]
+  "workspaces": ["packages/*"],
+  "scripts": {
+    "start": "concurrently 'yarn --cwd packages/api dev' 'yarn --cwd packages/api proxy' 'yarn --cwd packages/www dev'"
+  },
+  "devDependencies": {
+    "concurrently": "^4.1.2"
+  }
 }
