@@ -30,7 +30,8 @@ const Title = styled.h4.attrs({ role: 'button' })`
   font-weight: normal;
   padding: 16px 0;
   font-size: 20px;
-  cursor: pointer;
+  cursor: ${({ empty }) => (empty ? 'default' : 'pointer')};
+  color: ${({ empty }) => (empty ? '#aaa' : '#484848')};
   margin: 0;
   display: flex;
   align-items: center;
@@ -41,9 +42,12 @@ export default function Folder({
   title,
   onDrop,
   onDragOver,
-  onDragLeave
+  onDragLeave,
+  searching
 }) {
   const [visibleState, setVisibleState] = useState(false)
+
+  const visible = (visibleState || searching) && children.length > 0
 
   return (
     <FolderWrapper
@@ -51,12 +55,15 @@ export default function Folder({
       onDragOver={onDragOver}
       onDragLeave={onDragLeave}
     >
-      <Title onClick={() => setVisibleState(!visibleState)}>
-        <StyledCaret flipped={visibleState} />
+      <Title
+        onClick={() => setVisibleState(!visibleState)}
+        empty={children.length === 0}
+      >
+        <StyledCaret flipped={visible} />
         <span>{title}</span>
       </Title>
-      <Expando open={visibleState}>
-        <Content open={visibleState}>{children}</Content>
+      <Expando open={visible}>
+        <Content open={visible}>{children}</Content>
       </Expando>
     </FolderWrapper>
   )
@@ -72,6 +79,7 @@ Folder.defaultProps = {
 Folder.propTypes = {
   children: PropTypes.node,
   title: PropTypes.string.isRequired,
+  searching: PropTypes.bool.isRequired,
   onDrop: PropTypes.func,
   onDragOver: PropTypes.func,
   onDragLeave: PropTypes.func

@@ -9,7 +9,8 @@ const GemSchema = new mongoose.Schema({
   createdAt: { type: Date, required: true, default: Date.now },
   favorite: { type: Boolean, required: true, default: false },
   folderId: { type: mongoose.Schema.Types.ObjectId, required: false },
-  deleted: { type: Boolean, required: true, default: false }
+  deleted: { type: Boolean, required: true, default: false },
+  body: { type: String }
 })
 
 module.exports = mongoose.model('Gem', GemSchema)
