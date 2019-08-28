@@ -5,6 +5,7 @@ import styled from 'styled-components'
 import { useQuery, useMutation } from 'react-apollo-hooks'
 import gql from 'graphql-tag'
 import cookie from 'cookie'
+import GoogleLogin from 'react-google-login'
 
 import { Title, P, SubTitle, Card } from '../components/Typography'
 import redirectLogin from '../lib/redirect'
@@ -21,6 +22,14 @@ const LOGIN_MUTATION = gql`
       user {
         email
       }
+    }
+  }
+`
+
+const GOOGLE_LOGIN_MUTATION = gql`
+  mutation Login($token: String!) {
+    googleLogin(token: $token) {
+      token
     }
   }
 `
@@ -88,6 +97,31 @@ const StyledDiamond = styled(Diamond).attrs({
   }
 `
 
+const GoogleSignInContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+
+  @media (${({ theme }) => theme.b.phoneOnly}) {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+`
+
+const GoogleSignInWrapper = styled.div`
+  @media (${({ theme }) => theme.b.phoneOnly}) {
+    margin-top: 12px;
+  }
+`
+
+function setCookieAndRedirect(token) {
+  document.cookie = cookie.serialize('session', token, {
+    maxAge: 60 * 60 * 24 * 28 // 4 weeks
+  })
+  Router.replace('/')
+}
+
 export default function Login() {
   const [emailState, setEmail] = useState('')
   const [loadingState, setLoadingState] = useState(false)
@@ -105,6 +139,13 @@ export default function Login() {
     update: (_, { data }) => {
       setLogin(data.login)
       setLoadingState(false)
+    }
+  })
+
+  const googleLogin = useMutation(GOOGLE_LOGIN_MUTATION, {
+    update: (_, { data }) => {
+      setLoadingState(false)
+      setCookieAndRedirect(data.googleLogin.token)
     }
   })
 
@@ -131,9 +172,25 @@ export default function Login() {
               onChange={({ target: { value } }) => setEmail(value)}
             />
           </div>
-          <Button type="submit" disabled={loadingState || !emailState.length}>
-            {!loadingState ? 'Continue' : ['Loading', <Button.Elipsis />]}
-          </Button>
+          <GoogleSignInContainer>
+            <Button type="submit" disabled={loadingState || !emailState.length}>
+              {!loadingState ? 'Continue' : ['Loading', <Button.Elipsis />]}
+            </Button>
+            <GoogleSignInWrapper>
+              <GoogleLogin
+                clientId="795169533128-s76506bnacmbe77rto11vs2g9vs72rgg.apps.googleusercontent.com"
+                render={({ onClick }) => (
+                  <A href="" onClick={onClick} role="button">
+                    Sign in with Google
+                  </A>
+                )}
+                onSuccess={response => {
+                  setLoadingState(true)
+                  googleLogin({ variables: { token: response.tokenId } })
+                }}
+              />
+            </GoogleSignInWrapper>
+          </GoogleSignInContainer>
         </form>
       </Card>
     )
@@ -177,10 +234,7 @@ function Verification({ loginState, undo }) {
   })
 
   if (!loading && !data.checkLogin.pending) {
-    document.cookie = cookie.serialize('session', data.checkLogin.token, {
-      maxAge: 60 * 60 * 24 * 28 // 4 weeks
-    })
-    Router.replace('/')
+    setCookieAndRedirect(data.checkLogin.token)
   }
 
   return (

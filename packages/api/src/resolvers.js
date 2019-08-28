@@ -71,7 +71,7 @@ module.exports = {
       const loginRequest = await LoginRequest.create({
         userId: user._id,
         pending: false,
-        token: jwt.sign({ id: user.i }, process.env.JWT_SECRET)
+        token: jwt.sign({ id: user._id }, process.env.JWT_SECRET)
       })
 
       return loginRequest
