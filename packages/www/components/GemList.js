@@ -32,12 +32,6 @@ const SEARCH_GEMS = gql`
   query searchGems($query: String!) {
     search(query: $query) {
       id
-      folderId
-      favorite
-      title
-      displayUrl
-      href
-      tags
     }
   }
 `
@@ -108,8 +102,12 @@ export default function GemList({ favorites }) {
   const [newGem, setNewGem] = useState({ url: '', tags: [] })
   const [searchQuery, setSearchQuery] = useState('')
 
-  function filterGems(gems, showFavorites) {
-    return gems.filter(g => g.favorite || !showFavorites)
+  function filterGems(gems, showFavorites, searchResults) {
+    return gems.filter(
+      g =>
+        (g.favorite || !showFavorites) &&
+        (searchResults === null || searchResults.includes(g.id))
+    )
   }
 
   function filterFolders(folders, gems, empty) {
@@ -179,8 +177,9 @@ export default function GemList({ favorites }) {
 
   function renderGems() {
     const gems = filterGems(
-      searchQuery.length ? searchData.search : data.viewer.gems,
-      favorites
+      data.viewer.gems,
+      favorites,
+      searchQuery.length ? searchData.search.map(s => s.id) : null
     )
 
     if (!gems.length)
@@ -271,6 +270,7 @@ export default function GemList({ favorites }) {
         favorites={favorites}
         onNewGemSubmit={({ url, tags }) => {
           setNewGem({ url: '', tags: [] })
+          setSearchQuery('')
           createGem({
             optimisticResponse: {
               __typename: 'Mutation',

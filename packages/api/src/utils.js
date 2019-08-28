@@ -52,9 +52,7 @@ function search(query, userId) {
       },
       (err, res) => {
         if (err) return reject(err)
-        res.hits.forEach(h => {
-          console.log({ deleted: h.deleted })
-        })
+
         resolve(
           res.hits.filter(h => h.userId === userId.toString() && !h.deleted)
         )
