@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken')
 const { OAuth2Client } = require('google-auth-library')
+const crypto = require('crypto')
 
 const User = require('./models/User')
 const Portal = require('./models/Portal')
@@ -201,7 +202,12 @@ module.exports = {
     notes: async ({ _id }) =>
       await Note.find({ userId: _id }).sort('-createdAt'),
     folders: async ({ _id }) =>
-      await Folder.find({ userId: _id }).sort('-createdAt')
+      await Folder.find({ userId: _id }).sort('-createdAt'),
+    avatar: async ({ email }) =>
+      `https://www.gravatar.com/avatar/${crypto
+        .createHash('md5')
+        .update(email.trim().toLowerCase())
+        .digest('hex')}`
   },
   Folder: {
     id: ({ _id }) => _id,
