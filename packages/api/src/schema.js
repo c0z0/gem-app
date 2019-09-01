@@ -9,6 +9,7 @@ module.exports = gql`
     gems(tagged: String): [Gem]!
     folders: [Folder]!
     notes: [Note]!
+    avatar: String
   }
 
   type Note {
