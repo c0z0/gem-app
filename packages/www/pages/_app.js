@@ -4,10 +4,15 @@ import Head from 'next/head'
 import React from 'react'
 import { ApolloProvider } from 'react-apollo'
 import { ApolloProvider as ApolloHooksProvider } from 'react-apollo-hooks'
+import * as Sentry from '@sentry/browser'
 
 import AppBanner from '../components/AppBanner'
 import withApollo from '../lib/withApollo'
 import theme from '../lib/theme'
+
+Sentry.init({
+  dsn: 'https://f200989e1904425db4c1a60d51595efa@sentry.io/1549171'
+})
 
 const GlobalStyle = createGlobalStyle`
    body {
