@@ -4,6 +4,7 @@ import PropTypes from 'prop-types'
 
 const Input = styled.input`
   width: 320px;
+  appearance: none;
   max-width: 100%;
   padding: 10px;
   font-size: 16px;
@@ -63,6 +64,7 @@ const InputWithLabel = styled.input`
   padding: 10px 0;
   flex: 1;
   padding-left: 10px;
+  appearance: none;
   border: none;
   background: transparent;
   border-left: 1px solid #ddd;
