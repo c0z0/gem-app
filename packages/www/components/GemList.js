@@ -7,7 +7,7 @@ import PropTypes from 'prop-types'
 
 import Menu from './Menu'
 import Folder from './Folder'
-import { Title, LoadingElipsis, H1 } from './Typography'
+import { H1 } from './Typography'
 import Toolbar from './Toolbar'
 import Container from './Container'
 import Gem from './Gem'
@@ -313,17 +313,14 @@ export default function GemList({ favorites }) {
             ? 'Search results'
             : `${favorites ? 'Favorite' : 'My'} Gems`}
         </H1>
-        {(searchQuery.length ? (
-          searchLoading
-        ) : (
-          loading
-        )) ? (
-          <Title style={{ textAlign: 'center' }}>
-            <LoadingElipsis />
-          </Title>
-        ) : (
-          renderGems()
-        )}
+        {(searchQuery.length
+        ? searchLoading
+        : loading)
+          ? Array(7)
+              .fill(0)
+              // eslint-disable-next-line react/no-array-index-key
+              .map((_, k) => <Gem.Placeholder key={k} />)
+          : renderGems()}
       </GemsContainer>
       <Footer />
     </React.Fragment>

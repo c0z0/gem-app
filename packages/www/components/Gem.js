@@ -36,7 +36,6 @@ const Title = styled.a`
   text-decoration: none;
   transition: all 0.2s;
   padding-right: 8px;
-  padding-bottom: 8px;
 
   &:hover {
     text-decoration: underline;
@@ -114,6 +113,7 @@ const AlignHorizontal = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
+  margin-top: 8px;
 `
 
 const MenuBackground = styled.div`
@@ -371,3 +371,25 @@ Gem.propTypes = {
   onToggleFavorite: PropTypes.func.isRequired,
   onMoveGem: PropTypes.func.isRequired
 }
+
+const PlaceholderTitle = styled.div`
+  height: 18px;
+  width: ${({ width }) => width}%;
+  background: #0001;
+`
+
+const PlaceholderHref = styled.div`
+  height: 12px;
+  width: ${({ width }) => width}%;
+  background: #0001;
+  margin-top: 8px;
+`
+
+Gem.Placeholder = () => (
+  <FakeMargin>
+    <Container>
+      <PlaceholderTitle width={60} />
+      <PlaceholderHref width={30} />
+    </Container>
+  </FakeMargin>
+)
