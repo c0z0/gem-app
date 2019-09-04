@@ -77,6 +77,7 @@ export default function Toolbar({
   newGem,
   onNewGemChange,
   onNewGemSubmit,
+  folders,
   newGemLoading,
   searchQuery,
   onSearchQueryChange,
@@ -124,6 +125,7 @@ export default function Toolbar({
           setNewGemVisible(false)
           onNewGemSubmit(nG)
         }}
+        folders={folders}
         visible={newGemVisible}
         newGem={newGem}
         onNewGemChange={onNewGemChange}
@@ -142,5 +144,6 @@ Toolbar.propTypes = {
   newGemLoading: PropTypes.bool.isRequired,
   onSearchQueryChange: PropTypes.func.isRequired,
   searchQuery: PropTypes.string.isRequired,
-  favorites: PropTypes.bool.isRequired
+  favorites: PropTypes.bool.isRequired,
+  folders: PropTypes.arrayOf(PropTypes.object).isRequired
 }

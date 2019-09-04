@@ -35,6 +35,8 @@ const Title = styled.a`
   color: ${({ theme }) => theme.main};
   text-decoration: none;
   transition: all 0.2s;
+  padding-right: 8px;
+  padding-bottom: 8px;
 
   &:hover {
     text-decoration: underline;
@@ -106,6 +108,12 @@ const MenuEntryBottom = keyframes`
     transform: translateY(0);
     opacity: 1; 
   }
+`
+
+const AlignHorizontal = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
 `
 
 const MenuBackground = styled.div`
@@ -186,12 +194,6 @@ const MenuItem = styled.li`
   }
 `
 
-const Tags = styled.div`
-  margin-top: 8px;
-  display: flex;
-  align-items: center;
-`
-
 const Star = styled.img.attrs({ src: '/static/star.svg' })`
   width: 14px;
   margin-right: 8px;
@@ -202,11 +204,9 @@ export default function Gem({
   title,
   href,
   displayUrl,
-  tags,
   favorite,
   onDelete,
   id,
-  onTagClick,
   onToggleFavorite,
   onDrag,
   onDragEnd,
@@ -334,20 +334,13 @@ export default function Gem({
               title
             )}
           </Title>{' '}
-          | <Url href={href}>{displayUrl}</Url>
+          <AlignHorizontal>
+            {favorite && (
+              <Star onClick={() => onToggleFavorite({ id, favorite })} />
+            )}
+            <Url href={href}>{displayUrl}</Url>
+          </AlignHorizontal>
         </div>
-        <Tags>
-          {favorite && (
-            <Star onClick={() => onToggleFavorite({ id, favorite })} />
-          )}
-          {!tags.length
-            ? 'No tags...'
-            : tags.map(t => (
-                <Tag key={t} onClick={() => onTagClick(t)}>
-                  {t}
-                </Tag>
-              ))}
-        </Tags>
       </Container>
     </FakeMargin>
   )
@@ -366,7 +359,6 @@ Gem.propTypes = {
   href: PropTypes.string.isRequired,
   displayUrl: PropTypes.string.isRequired,
   favorite: PropTypes.bool.isRequired,
-  tags: PropTypes.arrayOf(PropTypes.string).isRequired,
   folders: PropTypes.arrayOf(
     PropTypes.shape({
       title: PropTypes.string,
@@ -376,7 +368,6 @@ Gem.propTypes = {
   onDelete: PropTypes.func.isRequired,
   onDrag: PropTypes.func,
   onDragEnd: PropTypes.func,
-  onTagClick: PropTypes.func.isRequired,
   onToggleFavorite: PropTypes.func.isRequired,
   onMoveGem: PropTypes.func.isRequired
 }

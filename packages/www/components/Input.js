@@ -54,7 +54,8 @@ const InputWrapper = styled.div`
 `
 
 const Label = styled.label`
-  min-width: 42px;
+  min-width: 46px;
+  padding: 10px 0;
   text-align: center;
 `
 
@@ -74,6 +75,49 @@ const InputWithLabel = styled.input`
     color: #ddd;
   }
 `
+
+Input.Option = styled.option`
+  padding: 10px 0;
+`
+
+const SelectWithLabel = styled.select`
+  padding: 10px 0;
+  flex: 1;
+  height: 100%;
+  border-radius: 0px;
+  padding-left: 10px;
+  border: none;
+  background: transparent;
+  border-left: 1px solid #ddd;
+  font-size: 16px;
+  outline: none;
+  color: #484848;
+  margin-left: 16px;
+  appearance: none;
+`
+
+Input.SelectWithLabel = props => (
+  <InputWrapper>
+    <Label>
+      {props.label /* eslint-disable-line react/destructuring-assignment */}
+    </Label>
+    <SelectWithLabel
+      {...props}
+      ref={
+        props.inputRef /* eslint-disable-line react/destructuring-assignment */
+      }
+    />
+  </InputWrapper>
+)
+
+Input.SelectWithLabel.defaultProps = {
+  inputRef: null
+}
+
+Input.SelectWithLabel.propTypes = {
+  label: PropTypes.string.isRequired,
+  inputRef: PropTypes.shape({ current: PropTypes.any })
+}
 
 Input.WithLabel = props => (
   <InputWrapper>
