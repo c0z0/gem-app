@@ -85,8 +85,18 @@ const DELETE_GEM_MUTATION = gql`
 `
 
 const CREATE_GEM_MUTATION = gql`
-  mutation Create($tags: [String]!, $url: String!, $favorite: Boolean) {
-    createGem(url: $url, tags: $tags, favorite: $favorite) {
+  mutation Create(
+    $tags: [String]!
+    $url: String!
+    $favorite: Boolean
+    $folderId: ID
+  ) {
+    createGem(
+      url: $url
+      tags: $tags
+      favorite: $favorite
+      folderId: $folderId
+    ) {
       id
       title
       displayUrl
@@ -268,7 +278,8 @@ export default function GemList({ favorites }) {
         onSearchQueryChange={setSearchQuery}
         newGem={newGem}
         favorites={favorites}
-        onNewGemSubmit={({ url, tags }) => {
+        folders={loading ? [] : data.viewer.folders}
+        onNewGemSubmit={({ url, tags, folderId }) => {
           setNewGem({ url: '', tags: [] })
           setSearchQuery('')
           createGem({
@@ -278,7 +289,7 @@ export default function GemList({ favorites }) {
                 __typename: 'Gem',
                 id: 'optimistic-id',
                 displayUrl: isValidUrl(url).host,
-                folderId: null,
+                folderId,
                 favorite: favorites,
                 title: 'Loading...',
                 href: url,
@@ -287,6 +298,7 @@ export default function GemList({ favorites }) {
             },
             variables: {
               url,
+              folderId,
               tags: tags.map(t => t.trim()).filter(t => t.length > 0),
               favorite: favorites
             }

@@ -57,6 +57,7 @@ export default function NewGem({
   onNewGemChange,
   newGem,
   loading,
+  folders,
   onSubmit
 }) {
   const linkInputRef = useRef(null)
@@ -91,19 +92,23 @@ export default function NewGem({
           />
         </InputWrapper>
         <InputWrapper>
-          <Input.WithLabel
-            label="Tags: "
-            flex
-            disabled={loading || !visible}
-            placeholder="diy, development, gym"
-            value={newGem.tags.join(',')}
-            onChange={({ target: { value } }) => {
+          <Input.SelectWithLabel
+            value={newGem.folderId}
+            label="Folder"
+            onChange={e =>
               onNewGemChange({
                 ...newGem,
-                tags: value.split(',')
+                folderId: e.target.value === 'no-folder' ? null : e.target.value
               })
-            }}
-          />
+            }
+          >
+            <Input.Option value="no-folder">No folder</Input.Option>
+            {folders.map(f => (
+              <Input.Option key={f.id} value={f.id}>
+                {f.title}
+              </Input.Option>
+            ))}
+          </Input.SelectWithLabel>
         </InputWrapper>
         <SubmitWrapper>
           <SubmitButton
@@ -133,5 +138,6 @@ NewGem.propTypes = {
   }).isRequired,
   onNewGemChange: PropTypes.func.isRequired,
   loading: PropTypes.bool.isRequired,
-  onSubmit: PropTypes.func.isRequired
+  onSubmit: PropTypes.func.isRequired,
+  folders: PropTypes.arrayOf(PropTypes.object).isRequired
 }
