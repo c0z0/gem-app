@@ -6,22 +6,6 @@ import PropTypes from 'prop-types'
 import Container from './Container'
 import { Diamond } from './Svg'
 
-const Badge = styled.span`
-  background: ${({ theme }) => theme.main};
-  color: #fff;
-  display: inline-block;
-  font-size: 10px;
-  font-weight: 600;
-  line-height: 15px;
-  padding: 0 4px;
-  height: 15px;
-  min-width: 15px;
-  border-radius: 7px;
-  text-align: center;
-
-  margin-right: 4px;
-`
-
 const Border = styled.div`
   border-bottom: solid 1px #eee;
   position: sticky;
@@ -140,10 +124,7 @@ export default function SubMenu({ controls, children, active }) {
             <MenuItem active={active === '/favorites'}>Favorites</MenuItem>
           </Link>
           <Link href="/notes" passHref prefetch>
-            <MenuItem active={active === '/notes'}>
-              <Badge>New</Badge>
-              Notes
-            </MenuItem>
+            <MenuItem active={active === '/notes'}>Notes</MenuItem>
           </Link>
         </MenuContainer>
       </ToolbarContainer>
