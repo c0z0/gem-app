@@ -6,6 +6,22 @@ import Link from 'next/link'
 import Container from './Container'
 import { Diamond } from './Svg'
 
+const Badge = styled.span`
+  background: ${({ theme }) => theme.main};
+  color: #fff;
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 600;
+  line-height: 15px;
+  padding: 0 4px;
+  height: 15px;
+  min-width: 15px;
+  border-radius: 7px;
+  text-align: center;
+
+  margin-right: 4px;
+`
+
 const MenuContainer = styled(Container)`
   padding-top: 20px;
   margin-bottom: 12px;
@@ -59,7 +75,9 @@ export default function Menu({ onLogout, portalActive }) {
       </Link>
       <div>
         <Link href="/portal" passHref>
-          <MenuItem active={portalActive}>Portal</MenuItem>
+          <MenuItem active={portalActive}>
+            <Badge>New</Badge>Portal
+          </MenuItem>
         </Link>
         <MenuItem href="" onClick={onLogout}>
           Logout
