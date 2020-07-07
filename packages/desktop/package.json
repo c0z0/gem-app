@@ -19,7 +19,7 @@
   },
   "devDependencies": {
     "electron-builder": "^20.38.5",
-    "electron": "^4.0.5"
+    "electron": "^9.1.0"
   },
   "build": {
     "productName": "Gem",
